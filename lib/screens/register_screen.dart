@@ -1,7 +1,20 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:shopping_list/database/db_helper.dart';
 import 'package:shopping_list/helper/preference.dart';
 import 'package:shopping_list/models/users_model.dart';
+
+//untuk menyimpan data agar langsung keganti di profile
+Future<void> simpanDataUser({
+  required String nama,
+  required String email,
+  required String noHp,
+}) async {
+  final prefs = await SharedPreferences.getInstance();
+  await prefs.setString('nama', nama);
+  await prefs.setString('email', email);
+  await prefs.setString('no_hp', noHp);
+}
 
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({super.key});
@@ -245,6 +258,14 @@ class _RegisterScreenState extends State<RegisterScreen> {
                               password: passwordController.text,
                             ),
                           );
+                          await simpanDataUser(
+                            nama: nameController.text,
+                            email: emailController.text,
+                            noHp: phoneController.text,
+                          );
+
+                          // pindah ke halaman login atau langsung ke shopping list
+                          Navigator.pushReplacementNamed(context, '/login');
                           ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(
                               content: Text('Registration Successful!'),

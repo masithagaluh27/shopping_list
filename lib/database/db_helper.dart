@@ -28,6 +28,8 @@ class DBHELPER13 {
           CREATE TABLE shopping_list (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             name TEXT,
+            deskripsi TEXT,
+            Toko TEXT,
             quantity INTEGER,
             isDone INTEGER
           )
@@ -68,11 +70,18 @@ class DBHELPER13 {
 
   //shopping list
 
-  static Future<void> insertItem(String name, int quantity) async {
+  static Future<void> insertItem(
+    String name,
+    String deskripsi,
+    String toko,
+    int quantity,
+  ) async {
     final db = await initDB();
 
     await db.insert('shopping_list', {
       'name': name,
+      'deskripsi': deskripsi,
+      'Toko': toko,
       'quantity': quantity,
       'isDone': 0,
     });
@@ -86,6 +95,8 @@ class DBHELPER13 {
   static Future<void> updateItem(
     int id,
     String name,
+    String deskripsi,
+    String toko,
     int quantity,
     bool isDone,
   ) async {
@@ -93,7 +104,13 @@ class DBHELPER13 {
 
     await db.update(
       'shopping_list',
-      {'name': name, 'quantity': quantity, 'isDone': isDone ? 1 : 0},
+      {
+        'name': name,
+        'deskripsi': deskripsi,
+        'Toko': toko,
+        'quantity': quantity,
+        'isDone': isDone ? 1 : 0,
+      },
       where: 'id = ?',
       whereArgs: [id],
     );

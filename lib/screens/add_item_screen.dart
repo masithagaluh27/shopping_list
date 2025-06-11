@@ -11,15 +11,20 @@ class AddItemScreen extends StatefulWidget {
 
 class _AddItemScreenState extends State<AddItemScreen> {
   final nameController = TextEditingController();
+  final deskripsiController = TextEditingController();
+  final tokoController = TextEditingController();
   final quantityController = TextEditingController();
+
   final _formKey = GlobalKey<FormState>();
 
   Future<void> saveItem() async {
     if (_formKey.currentState!.validate()) {
       String name = nameController.text;
+      String deskripsi = deskripsiController.text;
+      String toko = tokoController.text;
       int quantity = int.parse(quantityController.text);
 
-      await DBHELPER13.insertItem(name, quantity);
+      await DBHELPER13.insertItem(name, deskripsi, toko, quantity);
 
       Navigator.pop(context);
     }
@@ -40,6 +45,42 @@ class _AddItemScreenState extends State<AddItemScreen> {
                 decoration: InputDecoration(
                   labelText: 'Nama Item',
                   hintText: 'Masukkan nama item',
+                  hintStyle: const TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w400,
+                  ),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(30),
+                  ),
+                ),
+                validator:
+                    (value) =>
+                        value == null || value.isEmpty ? 'Wajib diisi' : null,
+              ),
+              const SizedBox(height: 16),
+              TextFormField(
+                controller: deskripsiController,
+                decoration: InputDecoration(
+                  labelText: 'Deskripsi',
+                  hintText: 'Masukkan deskripsi produk',
+                  hintStyle: const TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w400,
+                  ),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(30),
+                  ),
+                ),
+                validator:
+                    (value) =>
+                        value == null || value.isEmpty ? 'Wajib diisi' : null,
+              ),
+              const SizedBox(height: 16),
+              TextFormField(
+                controller: tokoController,
+                decoration: InputDecoration(
+                  labelText: 'Nama Toko',
+                  hintText: 'Masukkan nama toko',
                   hintStyle: const TextStyle(
                     fontSize: 14,
                     fontWeight: FontWeight.w400,

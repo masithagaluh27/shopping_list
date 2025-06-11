@@ -12,12 +12,16 @@ class EditItemScreen extends StatefulWidget {
 
 class _EditItemScreenState extends State<EditItemScreen> {
   late TextEditingController nameController;
+  late TextEditingController deskripsiController;
+  late TextEditingController tokoController;
   late TextEditingController quantityController;
   final _formKey = GlobalKey<FormState>();
 
   @override
   void initState() {
     nameController = TextEditingController(text: widget.item['name']);
+    deskripsiController = TextEditingController(text: widget.item['deskripsi']);
+    tokoController = TextEditingController(text: widget.item['Toko']);
     quantityController = TextEditingController(
       text: widget.item['quantity'].toString(),
     );
@@ -28,10 +32,12 @@ class _EditItemScreenState extends State<EditItemScreen> {
     if (_formKey.currentState!.validate()) {
       int id = widget.item['id'];
       String name = nameController.text;
+      String deskripsi = deskripsiController.text;
+      String toko = tokoController.text;
       int quantity = int.parse(quantityController.text);
       bool isDone = widget.item['isDone'] == 1;
 
-      await DBHELPER13.updateItem(id, name, quantity, isDone);
+      await DBHELPER13.updateItem(id, name, deskripsi, toko, quantity, isDone);
 
       Navigator.pop(context);
     }
@@ -52,6 +58,17 @@ class _EditItemScreenState extends State<EditItemScreen> {
                 decoration: const InputDecoration(labelText: 'Nama Item'),
                 validator: (value) => value!.isEmpty ? 'Wajib diisi' : null,
               ),
+              TextFormField(
+                controller: deskripsiController,
+                decoration: const InputDecoration(labelText: 'Deskripsi'),
+                validator: (value) => value!.isEmpty ? 'Wajib diisi' : null,
+              ),
+              TextFormField(
+                controller: tokoController,
+                decoration: const InputDecoration(labelText: 'Nama Toko'),
+                validator: (value) => value!.isEmpty ? 'Wajib diisi' : null,
+              ),
+
               TextFormField(
                 controller: quantityController,
                 decoration: const InputDecoration(labelText: 'Jumlah'),

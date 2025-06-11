@@ -31,12 +31,15 @@ dependencies:
   cupertino_icons: ^1.0.8
   flutter:
     sdk: flutter
+  syncfusion_flutter_charts: 29.2.10
+
   flutter_easyloading: ^3.0.5
   intl: ^0.20.2
   path: ^1.9.0
   path_provider: ^2.1.5
   shared_preferences: ^2.5.3
   sqflite: ^2.4.2
+  
 
 dev_dependencies:
   flutter_lints: ^5.0.0
@@ -56,6 +59,9 @@ flutter:
   assets:
    
     -  assets/images/notes.PNG
+    -  assets/images/iconGoogle.PNG
+    -  assets/images/logo facebook.PNG
+    -  assets/images/cutebear.JPEG
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images

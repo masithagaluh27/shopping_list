@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:shopping_list/screens/add_item_screen.dart';
 import 'package:shopping_list/screens/login_screen.dart';
+import 'package:shopping_list/screens/profile_screen.dart';
 import 'package:shopping_list/screens/register_screen.dart';
-import 'package:shopping_list/screens/setting_screen.dart';
 import 'package:shopping_list/screens/shopping_list_screen.dart';
+import 'package:shopping_list/screens/statistik_screen.dart';
 import 'package:shopping_list/utils/splash_screen.dart';
 
 void main() {
@@ -28,10 +29,10 @@ class MyApp extends StatelessWidget {
         '/add_item': (context) => const AddItemScreen(),
 
         // '/edit_item': (context) => const EditItemScreen(),
-        '/statistics': (context) => const SettingScreen(),
+        '/statistik': (context) => const StatistikScreen(),
+        '/profile_screen': (context) => const ProfileScreen(),
         LoginScreen.id: (context) => const LoginScreen(),
         RegisterScreen.id: (context) => const RegisterScreen(),
-        // SettingScreen.id (context) => const SettingScreen(),
       },
     );
   }
