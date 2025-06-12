@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:shopping_list/database/db_helper.dart'; // Import DBHELPER13
-import 'package:shopping_list/helper/preference.dart'; // Import PreferenceHandler
+import 'package:shopping_list/database/db_helper.dart';
+import 'package:shopping_list/helper/preference.dart';
 import 'package:shopping_list/helper/routes.dart';
-// Import UserModel
+import 'edit_profile_screen.dart';
 
 class ProfileScreen extends StatefulWidget {
-  final int userId; // Add userId to the constructor
+  final int userId;
   const ProfileScreen({super.key, required this.userId});
-  static const String id =
-      '/profile_screen'; // ID route untuk navigasi antar halaman
+  // static const String id =   '/profile_screen';
 
   @override
   State<ProfileScreen> createState() => _ProfileScreenState();
@@ -24,32 +23,28 @@ class _ProfileScreenState extends State<ProfileScreen> {
   @override
   void initState() {
     super.initState();
-    _loadUserData(); // Call new method to load user data from DB
+    _loadUserData();
   }
 
-  // Function to load user data from the database using userId
   Future<void> _loadUserData() async {
     final user = await DBHELPER13.getUserById(widget.userId);
     if (user != null) {
       setState(() {
         nama = user.name ?? '-';
         username = user.username ?? '-';
-        email = user.email; // Email is non-nullable in UserModel
+        email = user.email;
         phoneNumber = user.phone ?? '-';
       });
     } else {
-      // Handle case where user data is not found (e.g., show error, log out)
       print("User with ID ${widget.userId} not found in database.");
-      // Optionally, force logout if user data is unexpectedly missing
+
       _logout();
     }
   }
 
   // fungsi log out
   Future<void> _logout() async {
-    // Use PreferenceHandler to clear login status and userId
     await PreferenceHandler.deleteLogin();
-    // Navigate to login screen and clear navigation stack
     Navigator.pushNamedAndRemoveUntil(
       context,
       AppRoutes.login,
@@ -184,14 +179,22 @@ class _ProfileScreenState extends State<ProfileScreen> {
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
               child: Row(
                 children: [
-                  // tmbl edit (beluum diberi fungsi)
+                  // tmbl edit
                   Expanded(
                     child: GestureDetector(
-                      onTap: () {
+                      onTap: () async {
                         // fungsi edit nanti bisa navigasi ke halaman edit profil
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(content: Text('Edit belum tersedia')),
+                        final updated = await Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder:
+                                (_) => EditProfileScreen(userId: widget.userId),
+                          ),
                         );
+                        if (updated == true) {
+                          // Refresh data profil setelah melakukan perubahan
+                          _loadUserData();
+                        }
                       },
                       child: Container(
                         padding: const EdgeInsets.all(16),
@@ -199,7 +202,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           color: Colors.blue[100],
                           borderRadius: BorderRadius.circular(8),
                         ),
-                        child: const Center(child: Text('edit')),
+                        child: const Center(child: Text('Edit')),
                       ),
                     ),
                   ),

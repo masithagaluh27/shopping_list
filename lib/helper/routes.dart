@@ -5,5 +5,4 @@ class AppRoutes {
   static const String shoppingList = '/shoppingList';
   static const String statistik = '/statistik';
   static const String profile = '/profile';
-  // static const String addItem = '/addItem'; // Uncomment when AddItemScreen is ready
 }

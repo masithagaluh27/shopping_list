@@ -2,17 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:shopping_list/database/db_helper.dart';
 
 class AddItemScreen extends StatefulWidget {
-  final int userId; // user ID dari halaman login atau home
+  final int userId;
 
   const AddItemScreen({super.key, required this.userId});
-  static const String id = '/add_item';
+  // static const String id = '/add_item';
 
   @override
   State<AddItemScreen> createState() => _AddItemScreenState();
 }
 
 class _AddItemScreenState extends State<AddItemScreen> {
-  final _formKey = GlobalKey<FormState>();
+  final _formKey = GlobalKey<FormState>(); //u/ validasi
 
   final nameController = TextEditingController();
   final deskripsiController = TextEditingController();
@@ -26,18 +26,15 @@ class _AddItemScreenState extends State<AddItemScreen> {
       final toko = tokoController.text;
       final quantity = int.parse(quantityController.text);
 
-      // Using widget.userId to associate the new item with the current user
       await DBHELPER13.insertItem(
-        widget.userId,
+        widget.userId, // pakai wiget u/ mengambil ID dr halaman sblmny
         name,
         deskripsi,
         toko,
         quantity,
       );
 
-      Navigator.pop(
-        context,
-      ); // Go back to the previous screen (ShoppingListScreen)
+      Navigator.pop(context);
     }
   }
 
@@ -48,23 +45,28 @@ class _AddItemScreenState extends State<AddItemScreen> {
       body: Padding(
         padding: const EdgeInsets.all(16),
         child: Form(
-          key: _formKey,
+          key: _formKey, //u/ validasi
           child: Column(
             children: [
               buildTextField(nameController, 'Nama Item'),
               const SizedBox(height: 16),
+
               buildTextField(deskripsiController, 'Deskripsi'),
               const SizedBox(height: 16),
+
               buildTextField(tokoController, 'Nama Toko'),
               const SizedBox(height: 16),
+
               buildTextField(
                 quantityController,
                 'Jumlah',
                 keyboardType: TextInputType.number,
               ),
               const SizedBox(height: 24),
+
+              // Tombol Simpan
               SizedBox(
-                width: double.infinity,
+                width: double.infinity, // tmbl yg luwes
                 child: ElevatedButton(
                   onPressed: saveItem,
                   style: ElevatedButton.styleFrom(
@@ -103,6 +105,7 @@ class _AddItemScreenState extends State<AddItemScreen> {
         hintStyle: const TextStyle(fontSize: 14),
         border: OutlineInputBorder(borderRadius: BorderRadius.circular(30)),
       ),
+
       validator:
           (value) => value == null || value.isEmpty ? 'Wajib diisi' : null,
     );

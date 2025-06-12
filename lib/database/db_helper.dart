@@ -11,7 +11,7 @@ class DBHELPER13 {
       path,
       version: 1,
       onCreate: (db, version) async {
-        // Tabel user
+        // tabel users
         await db.execute('''
           CREATE TABLE users (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -23,7 +23,7 @@ class DBHELPER13 {
           )
         ''');
 
-        // Tabel shopping list
+        // tabel shopping list
         await db.execute('''
           CREATE TABLE shopping_list (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -33,7 +33,9 @@ class DBHELPER13 {
             Toko TEXT,
             quantity INTEGER,
             isDone INTEGER,
-            FOREIGN KEY (userId) REFERENCES users (id) ON DELETE CASCADE ON UPDATE CASCADE
+            FOREIGN KEY (userId) REFERENCES users (id) 
+              ON DELETE CASCADE 
+              ON UPDATE CASCADE
           )
         ''');
       },
@@ -71,15 +73,14 @@ class DBHELPER13 {
     }
   }
 
-  /// New method to fetch a user by their ID.
-  /// This will be used by the ProfileScreen to load specific user details.
+  //u/ hal profile
   static Future<UserModel?> getUserById(int id) async {
     final db = await initDB();
     final List<Map<String, dynamic>> data = await db.query(
       'users',
       where: 'id = ?',
       whereArgs: [id],
-      limit: 1, // Only expect one user per ID
+      limit: 1,
     );
 
     if (data.isNotEmpty) {
@@ -88,8 +89,6 @@ class DBHELPER13 {
       return null;
     }
   }
-
-  //shopping list
 
   static Future<void> insertItem(
     int userId,
@@ -110,12 +109,12 @@ class DBHELPER13 {
     });
   }
 
-  // IMPORTANT: getAllItems is kept, but getItemsByUser is preferred for specific user data.
   static Future<List<Map<String, dynamic>>> getAllItems() async {
     final db = await initDB();
     return db.query('shopping_list');
   }
 
+  // u/ update item berdasarkan shopping list
   static Future<void> updateItem(
     int id,
     String name,
@@ -146,13 +145,24 @@ class DBHELPER13 {
     await db.delete('shopping_list', where: 'id = ?', whereArgs: [id]);
   }
 
-  // Get shopping list items by user ID
+  //u/ user bisa liat data sendiri
   static Future<List<Map<String, dynamic>>> getItemsByUser(int userId) async {
     final db = await initDB();
     return await db.query(
       'shopping_list',
       where: 'userId = ?',
       whereArgs: [userId],
+    );
+  }
+
+  // u/ update user
+  static Future<int> updateUserModel(UserModel user) async {
+    final db = await initDB();
+    return await db.update(
+      'users',
+      {'name': user.name, 'username': user.username, 'phone': user.phone},
+      where: 'id = ?',
+      whereArgs: [user.id],
     );
   }
 }

@@ -11,7 +11,7 @@ class EditItemScreen extends StatefulWidget {
 }
 
 class _EditItemScreenState extends State<EditItemScreen> {
-  final _formKey = GlobalKey<FormState>();
+  final _formKey = GlobalKey<FormState>(); // Buat validasi form
 
   late TextEditingController nameController;
   late TextEditingController deskripsiController;
@@ -21,8 +21,9 @@ class _EditItemScreenState extends State<EditItemScreen> {
   @override
   void initState() {
     super.initState();
-    // Initialize controllers with the current item's data
-    nameController = TextEditingController(text: widget.item['name']);
+    nameController = TextEditingController(
+      text: widget.item['name'],
+    ); //psksi widget bcs mengambil data dr luar
     deskripsiController = TextEditingController(text: widget.item['deskripsi']);
     tokoController = TextEditingController(text: widget.item['Toko']);
     quantityController = TextEditingController(
@@ -30,25 +31,22 @@ class _EditItemScreenState extends State<EditItemScreen> {
     );
   }
 
-  // Function to update the item in the database
   Future<void> updateItem() async {
     if (_formKey.currentState!.validate()) {
-      int id = widget.item['id']; // Get the item's ID
+      int id = widget.item['id'];
       String name = nameController.text;
       String deskripsi = deskripsiController.text;
       String toko = tokoController.text;
       int quantity = int.parse(quantityController.text);
-      int isDone = widget.item['isDone'] ?? 0; // Preserve the isDone status
+      int isDone = widget.item['isDone'] ?? 0;
 
+      //u/ update ke database
       await DBHELPER13.updateItem(id, name, deskripsi, toko, quantity, isDone);
 
-      Navigator.pop(
-        context,
-      ); // Go back to the previous screen (ShoppingListScreen)
+      Navigator.pop(context);
     }
   }
 
-  // Helper widget to build text form fields
   Widget buildTextField(
     TextEditingController controller,
     String label, {
@@ -59,10 +57,10 @@ class _EditItemScreenState extends State<EditItemScreen> {
       keyboardType: keyboardType,
       decoration: InputDecoration(
         labelText: label,
-        hintText: 'Masukkan $label',
         hintStyle: const TextStyle(fontSize: 14),
         border: OutlineInputBorder(borderRadius: BorderRadius.circular(30)),
       ),
+
       validator:
           (value) => value == null || value.isEmpty ? 'Wajib diisi' : null,
     );
@@ -75,7 +73,7 @@ class _EditItemScreenState extends State<EditItemScreen> {
       body: Padding(
         padding: const EdgeInsets.all(16),
         child: Form(
-          key: _formKey,
+          key: _formKey, // u/ validasi
           child: Column(
             children: [
               buildTextField(nameController, 'Nama Item'),
@@ -93,7 +91,7 @@ class _EditItemScreenState extends State<EditItemScreen> {
               SizedBox(
                 width: double.infinity,
                 child: ElevatedButton(
-                  onPressed: updateItem,
+                  onPressed: updateItem, // u/ menyimpan perubahan
                   style: ElevatedButton.styleFrom(
                     padding: const EdgeInsets.symmetric(vertical: 16),
                     shape: const StadiumBorder(),

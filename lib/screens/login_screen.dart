@@ -1,22 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:shopping_list/database/db_helper.dart';
-import 'package:shopping_list/helper/preference.dart'; // Import PreferenceHandler
+import 'package:shopping_list/helper/preference.dart';
 import 'package:shopping_list/helper/routes.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
-  static const String id = '/login_screen_app'; // ID route untuk navigasi
+  // static const String id = '/login_screen_app';
 
   @override
   State<LoginScreen> createState() => _LoginScreenState();
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  // Controller untuk input email dan password
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
-
-  // untuk validasi
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   //u/ icon lihat/sembunyikan password
@@ -25,10 +22,10 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // SafeArea agar isi layar tidak tertutup hardware
       body: SafeArea(
+        //aar tdk tertutup lyr
         child: Padding(
-          padding: const EdgeInsets.all(20), // Margin di sisi' layar
+          padding: const EdgeInsets.all(20),
           child: SingleChildScrollView(
             child: Form(
               key: _formKey, // untuk validasi input
@@ -81,10 +78,13 @@ class _LoginScreenState extends State<LoginScreen> {
                     controller: emailController, // Menyimpan input email
                     validator: (value) {
                       if (value == null || value.isEmpty) {
-                        return 'Email wajib diisi'; // validasi jika user tdk memasukan email
+                        return 'Email wajib diisi';
+                      } else if (!value.contains('@') || !value.contains('.')) {
+                        return 'Format email tidak valid';
                       }
                       return null;
                     },
+
                     decoration: InputDecoration(
                       hintText: 'example@gmail.com',
                       border: OutlineInputBorder(

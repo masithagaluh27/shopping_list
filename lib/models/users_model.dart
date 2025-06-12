@@ -17,7 +17,6 @@ class UserModel {
     required this.password,
   });
 
-  // Convert ke Map (untuk database)
   Map<String, dynamic> toMap() {
     return {
       'id': id,
@@ -29,7 +28,6 @@ class UserModel {
     };
   }
 
-  // Convert dari Map ke objek
   factory UserModel.fromMap(Map<String, dynamic> map) {
     return UserModel(
       id: map['id'],
@@ -41,10 +39,8 @@ class UserModel {
     );
   }
 
-  // Convert ke JSON (opsional untuk API/penyimpanan lokal)
   String toJson() => json.encode(toMap());
 
-  // Convert dari JSON
   factory UserModel.fromJson(String source) =>
       UserModel.fromMap(json.decode(source));
 }

@@ -72,11 +72,15 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   const SizedBox(height: 15),
                   TextFormField(
                     controller: emailController,
-                    validator:
-                        (value) =>
-                            value == null || value.isEmpty
-                                ? 'Please enter some text'
-                                : null,
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Email tidak boleh kosong';
+                      } else if (!value.contains('@') ||
+                          !value.endsWith('.com')) {
+                        return 'Format email tidak valid';
+                      }
+                      return null;
+                    },
                     decoration: InputDecoration(
                       hintText: 'example@gmail.com',
                       border: OutlineInputBorder(
@@ -85,11 +89,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     ),
                   ),
 
-                  const SizedBox(height: 10),
-                  const Text(
-                    'Nama',
-                    style: TextStyle(fontSize: 12, color: Color(0xff888888)),
-                  ),
                   const SizedBox(height: 15),
                   TextFormField(
                     controller: nameController,
