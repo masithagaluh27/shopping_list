@@ -4,13 +4,15 @@ import 'package:shopping_list/database/db_helper.dart';
 import 'package:shopping_list/helper/preference.dart';
 import 'package:shopping_list/models/users_model.dart';
 
-//untuk menyimpan data agar langsung keganti di profile
+//Fungsi ini menyimpan data user (nama, email, noHp) ke dalam SharedPreferences
+
 Future<void> simpanDataUser({
   required String nama,
   required String email,
   required String noHp,
 }) async {
-  final prefs = await SharedPreferences.getInstance();
+  final prefs =
+      await SharedPreferences.getInstance(); // Mendapatkan instance/objek dari  SharedPreferences
   await prefs.setString('nama', nama);
   await prefs.setString('email', email);
   await prefs.setString('no_hp', noHp);
@@ -18,20 +20,22 @@ Future<void> simpanDataUser({
 
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({super.key});
-  static const String id = '/Register_screen_app';
+  static const String id =
+      '/Register_screen_app'; // ID halaman, bisa dipakai saat navigasi dengan route name
 
   @override
   State<RegisterScreen> createState() => _RegisterScreenState();
 }
 
 class _RegisterScreenState extends State<RegisterScreen> {
-  final _formKey = GlobalKey<FormState>();
+  final _formKey = GlobalKey<FormState>(); // Untuk validasi form
   final TextEditingController emailController = TextEditingController();
   final TextEditingController nameController = TextEditingController();
   final TextEditingController usernameController = TextEditingController();
   final TextEditingController phoneController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
-  bool isPasswordVisible = false;
+
+  bool isPasswordVisible = false; // Untuk visibilitas password
 
   @override
   Widget build(BuildContext context) {
@@ -40,16 +44,16 @@ class _RegisterScreenState extends State<RegisterScreen> {
         child: Padding(
           padding: const EdgeInsets.all(20),
           child: Form(
-            key: _formKey,
+            key: _formKey, // Form dengan validasi
             child: SingleChildScrollView(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  /// Judul halaman
                   const SizedBox(height: 20),
                   Row(
                     children: const [
                       SizedBox(width: 20),
-
                       Text(
                         "Register",
                         style: TextStyle(
@@ -59,154 +63,118 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       ),
                     ],
                   ),
-
                   const SizedBox(height: 16),
                   const Text(
                     "Register your account",
                     style: TextStyle(fontSize: 14, fontWeight: FontWeight.w400),
                   ),
+
+                  /// Input Email
                   const SizedBox(height: 25),
                   const Text(
                     'Email Address',
-                    style: TextStyle(
-                      fontWeight: FontWeight.w400,
-                      fontSize: 12,
-                      color: Color(0xff888888),
-                    ),
+                    style: TextStyle(fontSize: 12, color: Color(0xff888888)),
                   ),
                   const SizedBox(height: 15),
                   TextFormField(
                     controller: emailController,
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'please enter some text';
-                      }
-                      return null;
-                    },
+                    validator:
+                        (value) =>
+                            value == null || value.isEmpty
+                                ? 'please enter some text'
+                                : null,
                     decoration: InputDecoration(
                       hintText: 'example@gmail.com',
-                      hintStyle: const TextStyle(
-                        fontSize: 14,
-                        fontWeight: FontWeight.w400,
-                      ),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(30),
                       ),
                     ),
                   ),
+
+                  /// Input Nama
                   const SizedBox(height: 10),
                   const Text(
                     'Nama',
-                    style: TextStyle(
-                      fontWeight: FontWeight.w400,
-                      fontSize: 12,
-                      color: Color(0xff888888),
-                    ),
+                    style: TextStyle(fontSize: 12, color: Color(0xff888888)),
                   ),
                   const SizedBox(height: 15),
                   TextFormField(
                     controller: nameController,
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'please enter some text';
-                      }
-                      return null;
-                    },
+                    validator:
+                        (value) =>
+                            value == null || value.isEmpty
+                                ? 'please enter some text'
+                                : null,
                     decoration: InputDecoration(
                       hintText: 'Enter your name',
-                      hintStyle: const TextStyle(
-                        fontSize: 14,
-                        fontWeight: FontWeight.w400,
-                      ),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(30),
                       ),
                     ),
                   ),
+
+                  /// Input Username
                   const SizedBox(height: 10),
                   const Text(
                     'Username',
-                    style: TextStyle(
-                      fontWeight: FontWeight.w400,
-                      fontSize: 12,
-                      color: Color(0xff888888),
-                    ),
+                    style: TextStyle(fontSize: 12, color: Color(0xff888888)),
                   ),
                   const SizedBox(height: 15),
                   TextFormField(
                     controller: usernameController,
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'please enter some text';
-                      }
-                      return null;
-                    },
+                    validator:
+                        (value) =>
+                            value == null || value.isEmpty
+                                ? 'please enter some text'
+                                : null,
                     decoration: InputDecoration(
                       hintText: 'Enter your username',
-                      hintStyle: const TextStyle(
-                        fontSize: 14,
-                        fontWeight: FontWeight.w400,
-                      ),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(30),
                       ),
                     ),
                   ),
+
+                  /// Input Phone
                   const SizedBox(height: 10),
                   const Text(
                     'Phone Number',
-                    style: TextStyle(
-                      fontWeight: FontWeight.w400,
-                      fontSize: 12,
-                      color: Color(0xff888888),
-                    ),
+                    style: TextStyle(fontSize: 12, color: Color(0xff888888)),
                   ),
                   const SizedBox(height: 15),
                   TextFormField(
                     controller: phoneController,
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'please enter some text';
-                      }
-                      return null;
-                    },
+                    validator:
+                        (value) =>
+                            value == null || value.isEmpty
+                                ? 'please enter some text'
+                                : null,
                     decoration: InputDecoration(
                       hintText: 'Enter your phone number',
-                      hintStyle: const TextStyle(
-                        fontSize: 14,
-                        fontWeight: FontWeight.w400,
-                      ),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(30),
                       ),
                     ),
                   ),
+
+                  /// Input Password
                   const SizedBox(height: 10),
                   const Text(
                     'Password',
-                    style: TextStyle(
-                      fontWeight: FontWeight.w400,
-                      fontSize: 12,
-                      color: Color(0xff888888),
-                    ),
+                    style: TextStyle(fontSize: 12, color: Color(0xff888888)),
                   ),
-
                   const SizedBox(height: 8),
                   TextFormField(
                     controller: passwordController,
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'please enter some text';
-                      }
-                      return null;
-                    },
-                    obscureText: !isPasswordVisible,
+                    obscureText:
+                        !isPasswordVisible, // u/ password bisa lihat/sembunyi
+                    validator:
+                        (value) =>
+                            value == null || value.isEmpty
+                                ? 'please enter some text'
+                                : null,
                     decoration: InputDecoration(
                       hintText: 'Enter your password',
-                      hintStyle: const TextStyle(
-                        fontSize: 14,
-                        fontWeight: FontWeight.w400,
-                      ),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(30),
                       ),
@@ -218,37 +186,45 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         ),
                         onPressed: () {
                           setState(() {
-                            isPasswordVisible = !isPasswordVisible;
+                            isPasswordVisible =
+                                !isPasswordVisible; // status visibilitas password
                           });
                         },
                       ),
                     ),
                   ),
+
+                  /// Tombol "Forgot Password?" (belum diconnect)
                   Align(
                     alignment: Alignment.centerRight,
                     child: TextButton(
-                      onPressed: () {},
+                      onPressed: () {}, // Kosong untuk sekarang
                       child: const Text(
                         'Forgot Password?',
                         style: TextStyle(
                           fontSize: 12,
-                          fontWeight: FontWeight.w700,
                           color: Color(0xffEA9459),
                         ),
                       ),
                     ),
                   ),
+
+                  /// Tombol Register
                   const SizedBox(height: 10),
                   SizedBox(
                     width: double.infinity,
                     child: ElevatedButton(
                       onPressed: () async {
+                        /// Cek validasi form
                         if (_formKey.currentState!.validate()) {
+                          /// Cetak input ke log (debugging)
                           print("Email: ${emailController.text}");
                           print("Name: ${nameController.text}");
                           print("Username: ${usernameController.text}");
                           print("Phone: ${phoneController.text}");
                           print("Password: ${passwordController.text}");
+
+                          /// Simpan data ke database lokal (SQLite)
                           DBHELPER13.registerUser(
                             data: UserModel(
                               name: nameController.text,
@@ -258,30 +234,32 @@ class _RegisterScreenState extends State<RegisterScreen> {
                               password: passwordController.text,
                             ),
                           );
+
+                          /// Simpan sebagian data ke SharedPreferences
                           await simpanDataUser(
                             nama: nameController.text,
                             email: emailController.text,
                             noHp: phoneController.text,
                           );
 
-                          // pindah ke halaman login atau langsung ke shopping list
-                          Navigator.pushReplacementNamed(context, '/login');
+                          /// Tampilkan snackbar berhasil
                           ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
+                            const SnackBar(
                               content: Text('Registration Successful!'),
                               backgroundColor: Colors.green,
                             ),
                           );
-                          Navigator.pop(context);
+
+                          /// Simpan status login (true)
+                          PreferenceHandler.saveLogin(true);
+
+                          /// Arahkan user ke halaman utama dan hilangkan semua halaman sebelumnya
+                          Navigator.pushNamedAndRemoveUntil(
+                            context,
+                            '/home',
+                            (route) => false,
+                          );
                         }
-
-                        PreferenceHandler.saveLogin(true);
-
-                        Navigator.pushNamedAndRemoveUntil(
-                          context,
-                          '/home',
-                          (route) => false,
-                        );
                       },
                       style: ElevatedButton.styleFrom(
                         shape: const StadiumBorder(),
@@ -290,19 +268,17 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       ),
                       child: const Text(
                         'Register',
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w700,
-                          color: Colors.white,
-                        ),
+                        style: TextStyle(fontSize: 16, color: Colors.white),
                       ),
                     ),
                   ),
+
+                  /// Tombol kembali ke halaman login
                   const SizedBox(height: 10),
                   Center(
                     child: TextButton(
                       onPressed: () {
-                        Navigator.pop(context);
+                        Navigator.pop(context); // Kembali ke halaman sebelumnya
                       },
                       child: const Text.rich(
                         TextSpan(
@@ -321,6 +297,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       ),
                     ),
                   ),
+
                   const SizedBox(height: 30),
                 ],
               ),

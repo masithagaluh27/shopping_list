@@ -3,13 +3,15 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
-  static const String id = '/profile_screen';
+  static const String id =
+      '/profile_screen'; // ID route untuk navigasi antar halaman
 
   @override
   State<ProfileScreen> createState() => _ProfileScreenState();
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
+  // Variabel yg akn mnympan informasi profil user
   String nama = '-';
   String username = '-';
   String email = '-';
@@ -21,9 +23,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
     dataUser();
   }
 
+  // untuk mengambil data user dari SharedPreferences
   Future<void> dataUser() async {
     final prefs = await SharedPreferences.getInstance();
     setState(() {
+      // u/ mengambil setiap data. pakai '-' jika data kosong/null
       nama = prefs.getString('nama') ?? '-';
       username = prefs.getString('username') ?? '-';
       email = prefs.getString('email') ?? '-';
@@ -31,26 +35,26 @@ class _ProfileScreenState extends State<ProfileScreen> {
     });
   }
 
+  // fungsi log out
   Future<void> _logout() async {
     final prefs = await SharedPreferences.getInstance();
-    await prefs.clear(); // untuk menghapus semua data login
-    Navigator.pushReplacementNamed(context, '/login');
+    await prefs.clear(); // untk menghapus semua data yg tersimpan
+    Navigator.pushReplacementNamed(context, '/login'); //diarahkn ke log in
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        automaticallyImplyLeading: false, //untuk membuang panah secara paksa!!!
+        automaticallyImplyLeading: false, // menghapus tombol login dg PAKSA!!!
         backgroundColor: const Color(0xffC4D9FF),
-
         centerTitle: true,
         title: const Text('Profil Lengkap'),
       ),
       body: SingleChildScrollView(
         child: Column(
           children: [
-            // Foto Profil
+            // Bagian Foto Profil
             Padding(
               padding: const EdgeInsets.only(top: 32),
               child: Container(
@@ -59,6 +63,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
                   gradient: const LinearGradient(
+                    // u/ Gradien warna profile
                     colors: [
                       Color.fromARGB(255, 245, 0, 163),
                       Color.fromARGB(136, 255, 115, 0),
@@ -69,8 +74,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 ),
                 child: const Padding(
                   padding: EdgeInsets.all(4),
-
                   child: CircleAvatar(
+                    //gambar di profil
                     radius: 50,
                     backgroundImage: AssetImage('assets/images/cutebear.JPEG'),
                     backgroundColor: Colors.grey,
@@ -79,11 +84,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
               ),
             ),
 
-            // Nama
+            // Teks Nama Pengguna
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 16),
               child: Text(
-                nama,
+                nama, // u/ mengambil data Nama dari SharedPreferences dari register
                 style: const TextStyle(
                   fontSize: 26,
                   fontWeight: FontWeight.bold,
@@ -92,7 +97,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               ),
             ),
 
-            // username
+            // Username
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
               child: Container(
@@ -105,12 +110,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   children: [
                     const Icon(Icons.person_2_outlined, color: Colors.blue),
                     const SizedBox(width: 8),
-                    Text(username),
+                    Text(
+                      username, // u/ mengambil data username dari SharedPreferences dari register
+                    ), //
                   ],
                 ),
               ),
             ),
-            // Email
+
+            // Informasi Email
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
               child: Container(
@@ -123,13 +131,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   children: [
                     const Icon(Icons.email_outlined, color: Colors.blue),
                     const SizedBox(width: 8),
-                    Text(email),
+                    Text(
+                      email,
+                    ), // u/ mengambil data email dari SharedPreferences dari register
                   ],
                 ),
               ),
             ),
 
-            // phone number
+            // Nomor Telepon
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
               child: Container(
@@ -145,18 +155,21 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       color: Colors.green,
                     ),
                     const SizedBox(width: 8),
-                    Text(phoneNumber),
+                    Text(
+                      phoneNumber,
+                    ), // u/ mengambil data no hp dari SharedPreferences dari register
                     const Spacer(),
                   ],
                 ),
               ),
             ),
 
-            // Tombol Postingan dan Logout
+            // tombol: "Edit" dan "Log Out"
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
               child: Row(
                 children: [
+                  // tmbl edit (beluum diberi fungsi)
                   Expanded(
                     child: Container(
                       padding: const EdgeInsets.all(16),
@@ -168,9 +181,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     ),
                   ),
                   const SizedBox(width: 16),
+
+                  // Tombol Logout
                   Expanded(
                     child: GestureDetector(
-                      onTap: _logout,
+                      onTap:
+                          _logout, // Ketika ditekn akn menjalankan fungsi logout
                       child: Container(
                         padding: const EdgeInsets.all(16),
                         decoration: BoxDecoration(

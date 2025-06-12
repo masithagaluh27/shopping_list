@@ -1,51 +1,62 @@
 import 'package:flutter/material.dart';
 import 'package:shopping_list/database/db_helper.dart';
+import 'package:shopping_list/helper/preference.dart'; // Import PreferenceHandler
 import 'package:shopping_list/screens/register_screen.dart';
 import 'package:shopping_list/screens/shopping_list_screen.dart';
 
-// import 'package:ppkd_flutter_masitha/your_register_screen.dart'; // Pastikan ini di-import jika ada halaman register
-
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
-  static const String id = '/login_screen_app';
+  static const String id = '/login_screen_app'; // ID route untuk navigasi
 
   @override
   State<LoginScreen> createState() => _LoginScreenState();
 }
 
 class _LoginScreenState extends State<LoginScreen> {
+  // Controller untuk input email dan password
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
+
+  // untuk validasi
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+
+  //u/ icon lihat/sembunyikan password
   bool isPasswordVisible = false;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      // SafeArea agar isi layar tidak tertutup hardware
       body: SafeArea(
         child: Padding(
-          padding: const EdgeInsets.all(20),
+          padding: const EdgeInsets.all(20), // Margin di sisi' layar
           child: SingleChildScrollView(
             child: Form(
-              key: _formKey,
+              key: _formKey, // untuk validasi input
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start, // Rata kiri
                 children: [
                   const SizedBox(height: 20),
+
+                  // Header
                   Row(
                     children: const [
                       Icon(Icons.arrow_back_ios),
                       SizedBox(width: 20),
                       Text(
                         "Login",
+
                         style: TextStyle(
-                          fontSize: 18,
+                          fontSize: 25,
                           fontWeight: FontWeight.w800,
                         ),
                       ),
                     ],
                   ),
+
                   const SizedBox(height: 40),
+
+                  // Teks welcome back
                   const Text(
                     "Welcome Back",
                     style: TextStyle(fontSize: 24, fontWeight: FontWeight.w700),
@@ -57,6 +68,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                   const SizedBox(height: 35),
 
+                  // Label dan input Email
                   const Text(
                     'Email Address',
                     style: TextStyle(
@@ -67,10 +79,10 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                   const SizedBox(height: 15),
                   TextFormField(
-                    controller: emailController,
+                    controller: emailController, // Menyimpan input email
                     validator: (value) {
                       if (value == null || value.isEmpty) {
-                        return 'Email wajib diisi';
+                        return 'Email wajib diisi'; // validasi jika user tdk memasukan email
                       }
                       return null;
                     },
@@ -83,6 +95,8 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
 
                   const SizedBox(height: 16),
+
+                  // Label dan input Password
                   const Text(
                     'Password',
                     style: TextStyle(
@@ -94,7 +108,8 @@ class _LoginScreenState extends State<LoginScreen> {
                   const SizedBox(height: 8),
                   TextFormField(
                     controller: passwordController,
-                    obscureText: !isPasswordVisible,
+                    obscureText:
+                        !isPasswordVisible, // u/ menyembunyikan teks password
                     validator: (value) {
                       if (value == null || value.isEmpty) {
                         return 'Password wajib diisi';
@@ -121,6 +136,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                   ),
 
+                  // text lupa password
                   Align(
                     alignment: Alignment.centerRight,
                     child: TextButton(
@@ -135,26 +151,36 @@ class _LoginScreenState extends State<LoginScreen> {
                       ),
                     ),
                   ),
+
                   const SizedBox(height: 10),
 
+                  // Tombol Login utama
                   SizedBox(
                     width: double.infinity,
                     child: ElevatedButton(
                       onPressed: () async {
                         try {
+                          // Cek form validasi
                           if (_formKey.currentState!.validate()) {
+                            // dari Login ke database
                             final userData = await DBHELPER13.login(
                               emailController.text,
                               passwordController.text,
                             );
-                            print('userData: $userData');
-                            // lanjutkan sesuai kode kamu
+
+                            // Jika login berhasil
                             if (userData != null) {
-                              Navigator.pushNamed(
+                              // Simpan status login true di SharedPreferences
+                              PreferenceHandler.saveLogin(true);
+
+                              Navigator.pushNamedAndRemoveUntil(
                                 context,
-                                ShoppingListScreen.id,
+                                ShoppingListScreen
+                                    .id, // diarahkan ke main screen
+                                (route) =>
+                                    false, // hapus semua route sebelumnya
                               );
-                              print('data ada ${userData.toJson()}');
+
                               ScaffoldMessenger.of(context).showSnackBar(
                                 const SnackBar(
                                   content: Text("Login successful"),
@@ -163,6 +189,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                 ),
                               );
                             } else {
+                              // Jika login gagal
                               ScaffoldMessenger.of(context).showSnackBar(
                                 const SnackBar(
                                   content: Text("Email atau password salah"),
@@ -193,6 +220,8 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
 
                   const SizedBox(height: 10),
+
+                  // u/ diarahkan ke Register screen
                   Center(
                     child: TextButton(
                       onPressed: () {
@@ -216,7 +245,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                   ),
 
-                  // Or Sign In With
+                  // "Or Sign In With"
                   Row(
                     children: const [
                       Expanded(child: Divider(thickness: 1)),
@@ -235,7 +264,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                   const SizedBox(height: 35),
 
-                  // Tombol Google & Facebook
+                  // Tombol Login Google & Facebook (belum aktif)
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
@@ -295,6 +324,8 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
 
                   const SizedBox(height: 20),
+
+                  // Teks tambahan "Join Us"
                   Align(
                     alignment: Alignment.centerLeft,
                     child: GestureDetector(
@@ -321,6 +352,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       ),
                     ),
                   ),
+
                   const SizedBox(height: 30),
                 ],
               ),
