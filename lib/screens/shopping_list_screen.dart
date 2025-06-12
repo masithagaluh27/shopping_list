@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:shopping_list/database/db_helper.dart';
+import 'package:shopping_list/screens/add_item_screen.dart';
 import 'package:shopping_list/screens/edit_item_screen.dart';
 import 'package:shopping_list/screens/profile_screen.dart';
-import 'package:shopping_list/screens/statistik_screen.dart'; // jangan lupa impor statistik screen
+import 'package:shopping_list/screens/statistik_screen.dart';
 
 class ShoppingListScreen extends StatefulWidget {
-  const ShoppingListScreen({super.key});
+  final int userId;
+  const ShoppingListScreen({super.key, required this.userId});
   static const String id = '/shopping_list';
 
   @override
@@ -15,8 +17,8 @@ class ShoppingListScreen extends StatefulWidget {
 class _ShoppingListScreenState extends State<ShoppingListScreen> {
   List<Map<String, dynamic>> items = [];
   List<Map<String, dynamic>> filteredItems = [];
-  String searchQuery = ''; //untuk search bar
-  int selectedIndex = 0; //untuk bottomnavigationbar
+  String searchQuery = '';
+  int selectedIndex = 0;
 
   @override
   void initState() {
@@ -25,14 +27,13 @@ class _ShoppingListScreenState extends State<ShoppingListScreen> {
   }
 
   Future<void> muatItems() async {
-    final data = await DBHELPER13.getAllItems();
+    final data = await DBHELPER13.getItemsByUser(widget.userId);
     setState(() {
       items = data;
       filteredItems = applySearch(data, searchQuery);
     });
   }
 
-  //untuk search bar
   List<Map<String, dynamic>> applySearch(
     List<Map<String, dynamic>> data,
     String query,
@@ -56,14 +57,12 @@ class _ShoppingListScreenState extends State<ShoppingListScreen> {
     ).showSnackBar(const SnackBar(content: Text('Item dihapus')));
   }
 
-  // Shopping List View
   Widget buildShoppingListView() {
     return SingleChildScrollView(
       padding: const EdgeInsets.only(bottom: 80),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Header
           Container(
             width: double.infinity,
             padding: const EdgeInsets.all(24),
@@ -84,18 +83,15 @@ class _ShoppingListScreenState extends State<ShoppingListScreen> {
             ),
           ),
           const SizedBox(height: 10),
-
-          // Total item
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 24),
             child: Text(
+              // This shows "Total catatan: 0" when no items are found
               'Total catatan: ${filteredItems.length}',
               style: const TextStyle(fontSize: 16, color: Colors.grey),
             ),
           ),
           const SizedBox(height: 10),
-
-          // Search bar
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 24),
             child: TextField(
@@ -110,103 +106,117 @@ class _ShoppingListScreenState extends State<ShoppingListScreen> {
                 setState(() {
                   searchQuery = value;
                   filteredItems = applySearch(items, searchQuery);
-                  //ini untuk mencari item dan bisa digunkn jka item tdk ad
                 });
+                // No explicit 'Tidak ada Data' needed here, as the UI automatically
+                // reflects the filteredItems list.
               },
             ),
           ),
           const SizedBox(height: 10),
-
-          // List item
-          for (var item in filteredItems)
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
-              child: Container(
-                decoration: BoxDecoration(
-                  color: item['isDone'] == 1 ? Colors.grey[300] : Colors.white,
-                  borderRadius: BorderRadius.circular(12),
-                  boxShadow: const [
-                    BoxShadow(
-                      color: Colors.black12,
-                      blurRadius: 4,
-                      offset: Offset(0, 2),
-                    ),
-                  ],
-                ),
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 12,
-                  vertical: 8,
-                ),
-                child: Row(
-                  children: [
-                    Checkbox(
-                      value: item['isDone'] == 1,
-                      onChanged: (value) async {
-                        await DBHELPER13.updateItem(
-                          item['id'],
-                          item['name'],
-                          item['deskripsi'],
-                          item['Toko'],
-                          item['quantity'],
-                          value ?? false,
-                        );
-                        await muatItems();
-                      },
-                    ),
-                    const SizedBox(width: 8),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          //agar tampil di homescreen
-                          Text(
-                            item['name'],
-                            style: const TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 16,
-                            ),
-                          ),
-                          Text(
-                            'Deskripsi: ${item['deskripsi']}',
-                            style: const TextStyle(color: Colors.grey),
-                          ),
-                          Text(
-                            'Toko: ${item['Toko']}',
-                            style: const TextStyle(color: Colors.grey),
-                          ),
-                          Text(
-                            'Quantity: ${item['quantity']}',
-                            style: const TextStyle(color: Colors.grey),
-                          ),
-                        ],
-                      ),
-                    ),
-                    IconButton(
-                      icon: const Icon(Icons.edit),
-                      onPressed: () async {
-                        await Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (_) => EditItemScreen(item: item),
-                          ),
-                        );
-                        await muatItems();
-                      },
-                    ),
-                    IconButton(
-                      icon: const Icon(Icons.delete, color: Colors.red),
-                      onPressed: () => deleteItem(item['id']),
-                    ),
-                  ],
+          // Check if filteredItems is empty to display the message
+          if (filteredItems.isEmpty)
+            const Padding(
+              padding: EdgeInsets.symmetric(horizontal: 24, vertical: 20),
+              child: Center(
+                child: Text(
+                  'Tidak ada Data', // Display this message
+                  style: TextStyle(fontSize: 18, color: Colors.grey),
                 ),
               ),
-            ),
+            )
+          else
+            // Otherwise, display the list of filtered items
+            for (var item in filteredItems)
+              Padding(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 16,
+                  vertical: 6,
+                ),
+                child: Container(
+                  decoration: BoxDecoration(
+                    color:
+                        item['isDone'] == 1 ? Colors.grey[300] : Colors.white,
+                    borderRadius: BorderRadius.circular(12),
+                    boxShadow: const [
+                      BoxShadow(
+                        color: Colors.black12,
+                        blurRadius: 4,
+                        offset: Offset(0, 2),
+                      ),
+                    ],
+                  ),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 12,
+                    vertical: 8,
+                  ),
+                  child: Row(
+                    children: [
+                      Checkbox(
+                        value: item['isDone'] == 1,
+                        onChanged: (value) async {
+                          await DBHELPER13.updateItem(
+                            item['id'],
+                            item['name'],
+                            item['deskripsi'],
+                            item['Toko'],
+                            item['quantity'],
+                            (value ?? false) ? 1 : 0,
+                          );
+                          await muatItems();
+                        },
+                      ),
+                      const SizedBox(width: 8),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              item['name'],
+                              style: const TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 16,
+                              ),
+                            ),
+                            Text(
+                              'Deskripsi: ${item['deskripsi']}',
+                              style: const TextStyle(color: Colors.grey),
+                            ),
+                            Text(
+                              'Toko: ${item['Toko']}',
+                              style: const TextStyle(color: Colors.grey),
+                            ),
+                            Text(
+                              'Quantity: ${item['quantity']}',
+                              style: const TextStyle(color: Colors.grey),
+                            ),
+                          ],
+                        ),
+                      ),
+                      IconButton(
+                        icon: const Icon(Icons.edit),
+                        onPressed: () async {
+                          await Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (_) => EditItemScreen(item: item),
+                            ),
+                          );
+                          await muatItems();
+                        },
+                      ),
+                      IconButton(
+                        icon: const Icon(Icons.delete, color: Colors.red),
+                        onPressed: () => deleteItem(item['id']),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
         ],
       ),
     );
   }
 
-  //untuk navigation bar
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -215,15 +225,20 @@ class _ShoppingListScreenState extends State<ShoppingListScreen> {
         index: selectedIndex,
         children: [
           buildShoppingListView(),
-          const StatistikScreen(),
-          const ProfileScreen(),
+          StatistikScreen(userId: widget.userId),
+          ProfileScreen(userId: widget.userId),
         ],
       ),
       floatingActionButton:
           selectedIndex == 0
               ? FloatingActionButton.extended(
                 onPressed: () async {
-                  await Navigator.pushNamed(context, '/add_item');
+                  await Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (_) => AddItemScreen(userId: widget.userId),
+                    ),
+                  );
                   await muatItems();
                 },
                 backgroundColor: const Color.fromARGB(255, 188, 183, 243),

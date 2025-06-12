@@ -3,7 +3,8 @@ import 'package:shopping_list/database/db_helper.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 
 class StatistikScreen extends StatefulWidget {
-  const StatistikScreen({super.key});
+  final int userId; // Add userId to the constructor
+  const StatistikScreen({super.key, required this.userId});
 
   // ID route untuk navigasi ke halaman statistik
   static const String id = '/statistik';
@@ -25,7 +26,8 @@ class _StatistikScreenState extends State<StatistikScreen> {
 
   // Fungsi async untuk mengambil data dari database dan menyimpannya ke dalam list items
   Future<void> _loadItems() async {
-    final data = await DBHELPER13.getAllItems(); //u/ Mengambil semua item
+    // Changed: Now uses getItemsByUser to fetch items specific to the logged-in user
+    final data = await DBHELPER13.getItemsByUser(widget.userId);
     setState(() {
       items = data; // Set data ke dalam state agar UI diperbarui
     });

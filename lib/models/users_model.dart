@@ -47,23 +47,4 @@ class UserModel {
   // Convert dari JSON
   factory UserModel.fromJson(String source) =>
       UserModel.fromMap(json.decode(source));
-
-  // Untuk update sebagian data
-  UserModel copyWith({
-    int? id,
-    String? name,
-    String? username,
-    String? email,
-    String? phone,
-    String? password,
-  }) {
-    return UserModel(
-      id: id ?? this.id,
-      name: name ?? this.name,
-      username: username ?? this.username,
-      email: email ?? this.email,
-      phone: phone ?? this.phone,
-      password: password ?? this.password,
-    );
-  }
 }

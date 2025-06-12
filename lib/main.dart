@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:shopping_list/screens/add_item_screen.dart';
+import 'package:shopping_list/helper/routes.dart';
 import 'package:shopping_list/screens/login_screen.dart';
 import 'package:shopping_list/screens/profile_screen.dart';
 import 'package:shopping_list/screens/register_screen.dart';
@@ -19,20 +19,37 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Daftar Belanja',
-      theme: ThemeData(primarySwatch: Colors.blue),
-      initialRoute: '/', //ini connect ke page awal yg kita mau
+      theme: ThemeData(
+        primarySwatch: Colors.blue, // Warna utama
+      ),
+      initialRoute: AppRoutes.splash, // Menggunakan konstanta dari AppRoutes
       routes: {
-        '/': (context) => const SplashScreen(),
-        '/login': (context) => const LoginScreen(),
-        '/register': (context) => const RegisterScreen(),
-        '/shopping_list': (context) => const ShoppingListScreen(),
-        '/add_item': (context) => const AddItemScreen(),
-
-        // '/edit_item': (context) => const EditItemScreen(),
-        '/statistik': (context) => const StatistikScreen(),
-        '/profile_screen': (context) => const ProfileScreen(),
-        LoginScreen.id: (context) => const LoginScreen(),
-        RegisterScreen.id: (context) => const RegisterScreen(),
+        AppRoutes.splash: (context) => const SplashScreen(),
+        AppRoutes.login: (context) => const LoginScreen(),
+        AppRoutes.register: (context) => const RegisterScreen(),
+        // Penting: userId sekarang diambil secara dinamis dari argumen rute.
+        // Ini memungkinkan data spesifik pengguna ditampilkan.
+        AppRoutes.shoppingList: (context) {
+          // Mendapatkan userId dari argumen rute.
+          // Jika tidak ada argumen yang diteruskan atau argumen bukan int, akan menggunakan default 0.
+          final int userId =
+              ModalRoute.of(context)?.settings.arguments as int? ?? 0;
+          return ShoppingListScreen(userId: userId);
+        },
+        // Updated: StatistikScreen now also takes userId as an argument.
+        AppRoutes.statistik: (context) {
+          final int userId =
+              ModalRoute.of(context)?.settings.arguments as int? ?? 0;
+          return StatistikScreen(userId: userId);
+        },
+        // Updated: ProfileScreen now also takes userId as an argument.
+        AppRoutes.profile: (context) {
+          final int userId =
+              ModalRoute.of(context)?.settings.arguments as int? ?? 0;
+          return ProfileScreen(userId: userId);
+        },
+        // Tambahkan route ID lainnya di bawah jika ada
+        // AppRoutes.addItem: (context) => const AddItemScreen(),
       },
     );
   }

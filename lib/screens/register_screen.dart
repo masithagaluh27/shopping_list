@@ -4,38 +4,34 @@ import 'package:shopping_list/database/db_helper.dart';
 import 'package:shopping_list/helper/preference.dart';
 import 'package:shopping_list/models/users_model.dart';
 
-//Fungsi ini menyimpan data user (nama, email, noHp) ke dalam SharedPreferences
-
+// Simpan data nama, email, dan noHp ke SharedPreferences
 Future<void> simpanDataUser({
   required String nama,
   required String email,
   required String noHp,
 }) async {
-  final prefs =
-      await SharedPreferences.getInstance(); // Mendapatkan instance/objek dari  SharedPreferences
+  final prefs = await SharedPreferences.getInstance();
   await prefs.setString('nama', nama);
   await prefs.setString('email', email);
-  await prefs.setString('no_hp', noHp);
+  await prefs.setString('phone', noHp);
 }
 
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({super.key});
-  static const String id =
-      '/Register_screen_app'; // ID halaman, bisa dipakai saat navigasi dengan route name
+  static const String id = '/Register_screen_app';
 
   @override
   State<RegisterScreen> createState() => _RegisterScreenState();
 }
 
 class _RegisterScreenState extends State<RegisterScreen> {
-  final _formKey = GlobalKey<FormState>(); // Untuk validasi form
+  final _formKey = GlobalKey<FormState>();
   final TextEditingController emailController = TextEditingController();
   final TextEditingController nameController = TextEditingController();
   final TextEditingController usernameController = TextEditingController();
   final TextEditingController phoneController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
-
-  bool isPasswordVisible = false; // Untuk visibilitas password
+  bool isPasswordVisible = false;
 
   @override
   Widget build(BuildContext context) {
@@ -44,12 +40,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
         child: Padding(
           padding: const EdgeInsets.all(20),
           child: Form(
-            key: _formKey, // Form dengan validasi
+            key: _formKey,
             child: SingleChildScrollView(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  /// Judul halaman
                   const SizedBox(height: 20),
                   Row(
                     children: const [
@@ -69,7 +64,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     style: TextStyle(fontSize: 14, fontWeight: FontWeight.w400),
                   ),
 
-                  /// Input Email
                   const SizedBox(height: 25),
                   const Text(
                     'Email Address',
@@ -81,7 +75,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     validator:
                         (value) =>
                             value == null || value.isEmpty
-                                ? 'please enter some text'
+                                ? 'Please enter some text'
                                 : null,
                     decoration: InputDecoration(
                       hintText: 'example@gmail.com',
@@ -91,7 +85,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     ),
                   ),
 
-                  /// Input Nama
                   const SizedBox(height: 10),
                   const Text(
                     'Nama',
@@ -103,7 +96,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     validator:
                         (value) =>
                             value == null || value.isEmpty
-                                ? 'please enter some text'
+                                ? 'Please enter some text'
                                 : null,
                     decoration: InputDecoration(
                       hintText: 'Enter your name',
@@ -113,7 +106,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     ),
                   ),
 
-                  /// Input Username
                   const SizedBox(height: 10),
                   const Text(
                     'Username',
@@ -125,7 +117,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     validator:
                         (value) =>
                             value == null || value.isEmpty
-                                ? 'please enter some text'
+                                ? 'Please enter some text'
                                 : null,
                     decoration: InputDecoration(
                       hintText: 'Enter your username',
@@ -135,7 +127,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     ),
                   ),
 
-                  /// Input Phone
                   const SizedBox(height: 10),
                   const Text(
                     'Phone Number',
@@ -147,7 +138,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     validator:
                         (value) =>
                             value == null || value.isEmpty
-                                ? 'please enter some text'
+                                ? 'Please enter some text'
                                 : null,
                     decoration: InputDecoration(
                       hintText: 'Enter your phone number',
@@ -157,7 +148,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     ),
                   ),
 
-                  /// Input Password
                   const SizedBox(height: 10),
                   const Text(
                     'Password',
@@ -166,12 +156,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   const SizedBox(height: 8),
                   TextFormField(
                     controller: passwordController,
-                    obscureText:
-                        !isPasswordVisible, // u/ password bisa lihat/sembunyi
+                    obscureText: !isPasswordVisible,
                     validator:
                         (value) =>
                             value == null || value.isEmpty
-                                ? 'please enter some text'
+                                ? 'Please enter some text'
                                 : null,
                     decoration: InputDecoration(
                       hintText: 'Enter your password',
@@ -186,19 +175,17 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         ),
                         onPressed: () {
                           setState(() {
-                            isPasswordVisible =
-                                !isPasswordVisible; // status visibilitas password
+                            isPasswordVisible = !isPasswordVisible;
                           });
                         },
                       ),
                     ),
                   ),
 
-                  /// Tombol "Forgot Password?" (belum diconnect)
                   Align(
                     alignment: Alignment.centerRight,
                     child: TextButton(
-                      onPressed: () {}, // Kosong untuk sekarang
+                      onPressed: () {},
                       child: const Text(
                         'Forgot Password?',
                         style: TextStyle(
@@ -209,40 +196,35 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     ),
                   ),
 
-                  /// Tombol Register
                   const SizedBox(height: 10),
                   SizedBox(
                     width: double.infinity,
                     child: ElevatedButton(
                       onPressed: () async {
-                        /// Cek validasi form
                         if (_formKey.currentState!.validate()) {
-                          /// Cetak input ke log (debugging)
-                          print("Email: ${emailController.text}");
-                          print("Name: ${nameController.text}");
-                          print("Username: ${usernameController.text}");
-                          print("Phone: ${phoneController.text}");
-                          print("Password: ${passwordController.text}");
-
-                          /// Simpan data ke database lokal (SQLite)
-                          DBHELPER13.registerUser(
-                            data: UserModel(
-                              name: nameController.text,
-                              username: usernameController.text,
-                              email: emailController.text,
-                              phone: phoneController.text,
-                              password: passwordController.text,
-                            ),
+                          final newUser = UserModel(
+                            name: nameController.text,
+                            username: usernameController.text,
+                            email: emailController.text,
+                            phone: phoneController.text,
+                            password: passwordController.text,
                           );
 
-                          /// Simpan sebagian data ke SharedPreferences
+                          // Simpan ke database dan ambil ID
+                          int userId = await DBHELPER13.registerUser(
+                            data: newUser,
+                          );
+
+                          // Simpan ke SharedPreferences
                           await simpanDataUser(
                             nama: nameController.text,
                             email: emailController.text,
                             noHp: phoneController.text,
                           );
 
-                          /// Tampilkan snackbar berhasil
+                          // Simpan status login dan userId
+                          await PreferenceHandler.saveLogin(true, userId);
+
                           ScaffoldMessenger.of(context).showSnackBar(
                             const SnackBar(
                               content: Text('Registration Successful!'),
@@ -250,13 +232,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
                             ),
                           );
 
-                          /// Simpan status login (true)
-                          PreferenceHandler.saveLogin(true);
-
-                          /// Arahkan user ke halaman utama dan hilangkan semua halaman sebelumnya
+                          // Navigasi ke login
                           Navigator.pushNamedAndRemoveUntil(
                             context,
-                            '/home',
+                            '/login',
                             (route) => false,
                           );
                         }
@@ -273,16 +252,15 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     ),
                   ),
 
-                  /// Tombol kembali ke halaman login
                   const SizedBox(height: 10),
                   Center(
                     child: TextButton(
                       onPressed: () {
-                        Navigator.pop(context); // Kembali ke halaman sebelumnya
+                        Navigator.pop(context);
                       },
                       child: const Text.rich(
                         TextSpan(
-                          text: "have an account? ",
+                          text: "Have an account? ",
                           style: TextStyle(color: Colors.black),
                           children: [
                             TextSpan(
@@ -297,7 +275,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       ),
                     ),
                   ),
-
                   const SizedBox(height: 30),
                 ],
               ),

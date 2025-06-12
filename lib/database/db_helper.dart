@@ -27,29 +27,32 @@ class DBHELPER13 {
         await db.execute('''
           CREATE TABLE shopping_list (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
+            userId INTEGER NOT NULL,
             name TEXT,
             deskripsi TEXT,
             Toko TEXT,
             quantity INTEGER,
-            isDone INTEGER
+            isDone INTEGER,
+            FOREIGN KEY (userId) REFERENCES users (id) ON DELETE CASCADE ON UPDATE CASCADE
           )
         ''');
       },
     );
   }
 
-  static Future<void> registerUser({UserModel? data}) async {
+  static Future<int> registerUser({UserModel? data}) async {
     final db = await initDB();
 
-    await db.insert('users', {
+    int id = await db.insert('users', {
       'name': data?.name,
       'username': data?.username,
       'email': data?.email,
       'phone': data?.phone,
       'password': data?.password,
-    }, conflictAlgorithm: ConflictAlgorithm.replace);
+    });
 
-    print('User registered successfully');
+    print('User registered successfully with ID: $id');
+    return id;
   }
 
   static Future<UserModel?> login(String email, String password) async {
@@ -68,9 +71,28 @@ class DBHELPER13 {
     }
   }
 
+  /// New method to fetch a user by their ID.
+  /// This will be used by the ProfileScreen to load specific user details.
+  static Future<UserModel?> getUserById(int id) async {
+    final db = await initDB();
+    final List<Map<String, dynamic>> data = await db.query(
+      'users',
+      where: 'id = ?',
+      whereArgs: [id],
+      limit: 1, // Only expect one user per ID
+    );
+
+    if (data.isNotEmpty) {
+      return UserModel.fromMap(data.first);
+    } else {
+      return null;
+    }
+  }
+
   //shopping list
 
   static Future<void> insertItem(
+    int userId,
     String name,
     String deskripsi,
     String toko,
@@ -79,6 +101,7 @@ class DBHELPER13 {
     final db = await initDB();
 
     await db.insert('shopping_list', {
+      'userId': userId,
       'name': name,
       'deskripsi': deskripsi,
       'Toko': toko,
@@ -87,6 +110,7 @@ class DBHELPER13 {
     });
   }
 
+  // IMPORTANT: getAllItems is kept, but getItemsByUser is preferred for specific user data.
   static Future<List<Map<String, dynamic>>> getAllItems() async {
     final db = await initDB();
     return db.query('shopping_list');
@@ -98,7 +122,7 @@ class DBHELPER13 {
     String deskripsi,
     String toko,
     int quantity,
-    bool isDone,
+    int isDone,
   ) async {
     final db = await initDB();
 
@@ -109,7 +133,7 @@ class DBHELPER13 {
         'deskripsi': deskripsi,
         'Toko': toko,
         'quantity': quantity,
-        'isDone': isDone ? 1 : 0,
+        'isDone': isDone,
       },
       where: 'id = ?',
       whereArgs: [id],
@@ -120,5 +144,15 @@ class DBHELPER13 {
     final db = await initDB();
 
     await db.delete('shopping_list', where: 'id = ?', whereArgs: [id]);
+  }
+
+  // Get shopping list items by user ID
+  static Future<List<Map<String, dynamic>>> getItemsByUser(int userId) async {
+    final db = await initDB();
+    return await db.query(
+      'shopping_list',
+      where: 'userId = ?',
+      whereArgs: [userId],
+    );
   }
 }

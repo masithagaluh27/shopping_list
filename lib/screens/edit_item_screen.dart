@@ -1,9 +1,9 @@
-// edit_item_screen.dart
 import 'package:flutter/material.dart';
 import 'package:shopping_list/database/db_helper.dart';
 
 class EditItemScreen extends StatefulWidget {
   final Map<String, dynamic> item;
+
   const EditItemScreen({super.key, required this.item});
 
   @override
@@ -11,36 +11,61 @@ class EditItemScreen extends StatefulWidget {
 }
 
 class _EditItemScreenState extends State<EditItemScreen> {
+  final _formKey = GlobalKey<FormState>();
+
   late TextEditingController nameController;
   late TextEditingController deskripsiController;
   late TextEditingController tokoController;
   late TextEditingController quantityController;
-  final _formKey = GlobalKey<FormState>();
 
   @override
   void initState() {
+    super.initState();
+    // Initialize controllers with the current item's data
     nameController = TextEditingController(text: widget.item['name']);
     deskripsiController = TextEditingController(text: widget.item['deskripsi']);
     tokoController = TextEditingController(text: widget.item['Toko']);
     quantityController = TextEditingController(
       text: widget.item['quantity'].toString(),
     );
-    super.initState();
   }
 
+  // Function to update the item in the database
   Future<void> updateItem() async {
     if (_formKey.currentState!.validate()) {
-      int id = widget.item['id'];
+      int id = widget.item['id']; // Get the item's ID
       String name = nameController.text;
       String deskripsi = deskripsiController.text;
       String toko = tokoController.text;
       int quantity = int.parse(quantityController.text);
-      bool isDone = widget.item['isDone'] == 1;
+      int isDone = widget.item['isDone'] ?? 0; // Preserve the isDone status
 
       await DBHELPER13.updateItem(id, name, deskripsi, toko, quantity, isDone);
 
-      Navigator.pop(context);
+      Navigator.pop(
+        context,
+      ); // Go back to the previous screen (ShoppingListScreen)
     }
+  }
+
+  // Helper widget to build text form fields
+  Widget buildTextField(
+    TextEditingController controller,
+    String label, {
+    TextInputType keyboardType = TextInputType.text,
+  }) {
+    return TextFormField(
+      controller: controller,
+      keyboardType: keyboardType,
+      decoration: InputDecoration(
+        labelText: label,
+        hintText: 'Masukkan $label',
+        hintStyle: const TextStyle(fontSize: 14),
+        border: OutlineInputBorder(borderRadius: BorderRadius.circular(30)),
+      ),
+      validator:
+          (value) => value == null || value.isEmpty ? 'Wajib diisi' : null,
+    );
   }
 
   @override
@@ -53,32 +78,36 @@ class _EditItemScreenState extends State<EditItemScreen> {
           key: _formKey,
           child: Column(
             children: [
-              TextFormField(
-                controller: nameController,
-                decoration: const InputDecoration(labelText: 'Nama Item'),
-                validator: (value) => value!.isEmpty ? 'Wajib diisi' : null,
-              ),
-              TextFormField(
-                controller: deskripsiController,
-                decoration: const InputDecoration(labelText: 'Deskripsi'),
-                validator: (value) => value!.isEmpty ? 'Wajib diisi' : null,
-              ),
-              TextFormField(
-                controller: tokoController,
-                decoration: const InputDecoration(labelText: 'Nama Toko'),
-                validator: (value) => value!.isEmpty ? 'Wajib diisi' : null,
-              ),
-
-              TextFormField(
-                controller: quantityController,
-                decoration: const InputDecoration(labelText: 'Jumlah'),
+              buildTextField(nameController, 'Nama Item'),
+              const SizedBox(height: 16),
+              buildTextField(deskripsiController, 'Deskripsi'),
+              const SizedBox(height: 16),
+              buildTextField(tokoController, 'Nama Toko'),
+              const SizedBox(height: 16),
+              buildTextField(
+                quantityController,
+                'Jumlah',
                 keyboardType: TextInputType.number,
-                validator: (value) => value!.isEmpty ? 'Wajib diisi' : null,
               ),
-              const SizedBox(height: 20),
-              ElevatedButton(
-                onPressed: updateItem,
-                child: const Text('Update'),
+              const SizedBox(height: 24),
+              SizedBox(
+                width: double.infinity,
+                child: ElevatedButton(
+                  onPressed: updateItem,
+                  style: ElevatedButton.styleFrom(
+                    padding: const EdgeInsets.symmetric(vertical: 16),
+                    shape: const StadiumBorder(),
+                    backgroundColor: Colors.blue.shade900,
+                  ),
+                  child: const Text(
+                    'Update',
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                    ),
+                  ),
+                ),
               ),
             ],
           ),

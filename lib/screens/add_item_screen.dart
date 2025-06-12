@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:shopping_list/database/db_helper.dart';
 
 class AddItemScreen extends StatefulWidget {
-  const AddItemScreen({super.key});
+  final int userId; // user ID dari halaman login atau home
+
+  const AddItemScreen({super.key, required this.userId});
   static const String id = '/add_item';
 
   @override
@@ -10,23 +12,32 @@ class AddItemScreen extends StatefulWidget {
 }
 
 class _AddItemScreenState extends State<AddItemScreen> {
+  final _formKey = GlobalKey<FormState>();
+
   final nameController = TextEditingController();
   final deskripsiController = TextEditingController();
   final tokoController = TextEditingController();
   final quantityController = TextEditingController();
 
-  final _formKey = GlobalKey<FormState>();
-
   Future<void> saveItem() async {
     if (_formKey.currentState!.validate()) {
-      String name = nameController.text;
-      String deskripsi = deskripsiController.text;
-      String toko = tokoController.text;
-      int quantity = int.parse(quantityController.text);
+      final name = nameController.text;
+      final deskripsi = deskripsiController.text;
+      final toko = tokoController.text;
+      final quantity = int.parse(quantityController.text);
 
-      await DBHELPER13.insertItem(name, deskripsi, toko, quantity);
+      // Using widget.userId to associate the new item with the current user
+      await DBHELPER13.insertItem(
+        widget.userId,
+        name,
+        deskripsi,
+        toko,
+        quantity,
+      );
 
-      Navigator.pop(context);
+      Navigator.pop(
+        context,
+      ); // Go back to the previous screen (ShoppingListScreen)
     }
   }
 
@@ -40,77 +51,16 @@ class _AddItemScreenState extends State<AddItemScreen> {
           key: _formKey,
           child: Column(
             children: [
-              TextFormField(
-                controller: nameController,
-                decoration: InputDecoration(
-                  labelText: 'Nama Item',
-                  hintText: 'Masukkan nama item',
-                  hintStyle: const TextStyle(
-                    fontSize: 14,
-                    fontWeight: FontWeight.w400,
-                  ),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(30),
-                  ),
-                ),
-                validator:
-                    (value) =>
-                        value == null || value.isEmpty ? 'Wajib diisi' : null,
-              ),
+              buildTextField(nameController, 'Nama Item'),
               const SizedBox(height: 16),
-              TextFormField(
-                controller: deskripsiController,
-                decoration: InputDecoration(
-                  labelText: 'Deskripsi',
-                  hintText: 'Masukkan deskripsi produk',
-                  hintStyle: const TextStyle(
-                    fontSize: 14,
-                    fontWeight: FontWeight.w400,
-                  ),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(30),
-                  ),
-                ),
-                validator:
-                    (value) =>
-                        value == null || value.isEmpty ? 'Wajib diisi' : null,
-              ),
+              buildTextField(deskripsiController, 'Deskripsi'),
               const SizedBox(height: 16),
-              TextFormField(
-                controller: tokoController,
-                decoration: InputDecoration(
-                  labelText: 'Nama Toko',
-                  hintText: 'Masukkan nama toko',
-                  hintStyle: const TextStyle(
-                    fontSize: 14,
-                    fontWeight: FontWeight.w400,
-                  ),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(30),
-                  ),
-                ),
-                validator:
-                    (value) =>
-                        value == null || value.isEmpty ? 'Wajib diisi' : null,
-              ),
+              buildTextField(tokoController, 'Nama Toko'),
               const SizedBox(height: 16),
-              TextFormField(
-                controller: quantityController,
-                decoration: InputDecoration(
-                  labelText: 'Jumlah',
-                  hintText: 'Masukkan jumlah item',
-                  hintStyle: const TextStyle(
-                    fontSize: 14,
-                    fontWeight: FontWeight.w400,
-                  ),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(30),
-                  ),
-                ),
+              buildTextField(
+                quantityController,
+                'Jumlah',
                 keyboardType: TextInputType.number,
-                validator:
-                    (value) =>
-                        value == null || value.isEmpty ? 'Wajib diisi' : null,
               ),
               const SizedBox(height: 24),
               SizedBox(
@@ -136,6 +86,25 @@ class _AddItemScreenState extends State<AddItemScreen> {
           ),
         ),
       ),
+    );
+  }
+
+  Widget buildTextField(
+    TextEditingController controller,
+    String label, {
+    TextInputType keyboardType = TextInputType.text,
+  }) {
+    return TextFormField(
+      controller: controller,
+      keyboardType: keyboardType,
+      decoration: InputDecoration(
+        labelText: label,
+        hintText: 'Masukkan $label',
+        hintStyle: const TextStyle(fontSize: 14),
+        border: OutlineInputBorder(borderRadius: BorderRadius.circular(30)),
+      ),
+      validator:
+          (value) => value == null || value.isEmpty ? 'Wajib diisi' : null,
     );
   }
 }

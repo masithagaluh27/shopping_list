@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:shopping_list/constant/app_style.dart';
+import 'package:shopping_list/constant/app_style.dart'; // Assuming this file exists and is correct
 import 'package:shopping_list/helper/preference.dart';
-import 'package:shopping_list/screens/login_screen.dart';
-import 'package:shopping_list/screens/shopping_list_screen.dart'; // Import halaman utama
+import 'package:shopping_list/helper/routes.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -19,22 +18,29 @@ class _SplashScreenState extends State<SplashScreen> {
     Future.delayed(const Duration(seconds: 3), () async {
       // Cek status login dari SharedPreferences
       bool isLogin = await PreferenceHandler.getLogin();
-      print("isLogin: $isLogin"); // Debug log untuk status login
+      // Also get the userId if needed for the ShoppingListScreen navigation
+      int? userId = await PreferenceHandler.getUserId();
+      print(
+        "isLogin: $isLogin, userId: $userId",
+      ); // Debug log untuk status login dan userId
 
-      // Jika sudah login, arahkan ke halaman utama
-      // Jika belum login, arahkan ke halaman login
-      if (isLogin) {
+      // Jika sudah login, arahkan ke halaman utama (ShoppingListScreen)
+      // Jika belum login, arahkan ke halaman login (LoginScreen)
+      if (isLogin && userId != null) {
         // Navigasi ke halaman utama dan menghapus semua halaman sebelumnya dari stack
+        // Using AppRoutes.shoppingList and passing the userId as arguments
         Navigator.pushNamedAndRemoveUntil(
           context,
-          ShoppingListScreen.id,
+          AppRoutes.shoppingList,
           (route) => false,
+          arguments: userId, // Pass the userId to the ShoppingListScreen
         );
       } else {
         // Navigasi ke halaman login dan menghapus semua halaman sebelumnya dari stack
+        // Using AppRoutes.login for consistency
         Navigator.pushNamedAndRemoveUntil(
           context,
-          LoginScreen.id,
+          AppRoutes.login,
           (route) => false,
         );
       }

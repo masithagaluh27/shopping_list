@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:shopping_list/database/db_helper.dart';
 import 'package:shopping_list/helper/preference.dart'; // Import PreferenceHandler
-import 'package:shopping_list/screens/register_screen.dart';
-import 'package:shopping_list/screens/shopping_list_screen.dart';
+import 'package:shopping_list/helper/routes.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -170,15 +169,19 @@ class _LoginScreenState extends State<LoginScreen> {
 
                             // Jika login berhasil
                             if (userData != null) {
-                              // Simpan status login true di SharedPreferences
-                              PreferenceHandler.saveLogin(true);
+                              // Simpan status login dan userId
+                              await PreferenceHandler.saveLogin(
+                                true,
+                                userData.id!,
+                              );
 
+                              // Navigasi ke ShoppingListScreen dan teruskan userId
                               Navigator.pushNamedAndRemoveUntil(
                                 context,
-                                ShoppingListScreen
-                                    .id, // diarahkan ke main screen
-                                (route) =>
-                                    false, // hapus semua route sebelumnya
+                                AppRoutes.shoppingList, // Menggunakan AppRoutes
+                                (route) => false,
+                                arguments:
+                                    userData.id!, // Meneruskan userId di sini
                               );
 
                               ScaffoldMessenger.of(context).showSnackBar(
@@ -225,7 +228,8 @@ class _LoginScreenState extends State<LoginScreen> {
                   Center(
                     child: TextButton(
                       onPressed: () {
-                        Navigator.pushNamed(context, RegisterScreen.id);
+                        // FIX: Menggunakan AppRoutes.register
+                        Navigator.pushNamed(context, AppRoutes.register);
                       },
                       child: const Text.rich(
                         TextSpan(
@@ -329,7 +333,10 @@ class _LoginScreenState extends State<LoginScreen> {
                   Align(
                     alignment: Alignment.centerLeft,
                     child: GestureDetector(
-                      onTap: () {},
+                      onTap: () {
+                        // FIX: Menggunakan AppRoutes.register
+                        Navigator.pushNamed(context, AppRoutes.register);
+                      },
                       child: RichText(
                         text: const TextSpan(
                           text: "Don't have an account? ",
