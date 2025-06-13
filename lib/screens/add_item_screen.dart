@@ -5,7 +5,6 @@ class AddItemScreen extends StatefulWidget {
   final int userId;
 
   const AddItemScreen({super.key, required this.userId});
-  // static const String id = '/add_item';
 
   @override
   State<AddItemScreen> createState() => _AddItemScreenState();
@@ -34,6 +33,19 @@ class _AddItemScreenState extends State<AddItemScreen> {
         quantity,
       );
 
+      // Tampilkan snackbar setelah item berhasil ditambahkan
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Item berhasil ditambahkan!'),
+          backgroundColor: Colors.green,
+          behavior: SnackBarBehavior.floating,
+          duration: Duration(seconds: 2),
+        ),
+      );
+
+      // Tunggu sebentar agar user sempat lihat snackbar
+      await Future.delayed(const Duration(milliseconds: 500));
+
       Navigator.pop(context);
     }
   }
@@ -51,16 +63,21 @@ class _AddItemScreenState extends State<AddItemScreen> {
               buildTextField(nameController, 'Nama Item'),
               const SizedBox(height: 16),
 
-              buildTextField(deskripsiController, 'Deskripsi'),
+              buildTextField(
+                deskripsiController,
+                'Deskripsi',
+                icon: Icons.description,
+              ),
               const SizedBox(height: 16),
 
-              buildTextField(tokoController, 'Nama Toko'),
+              buildTextField(tokoController, 'Nama Toko', icon: Icons.store),
               const SizedBox(height: 16),
 
               buildTextField(
                 quantityController,
                 'Jumlah',
                 keyboardType: TextInputType.number,
+                icon: Icons.format_list_numbered,
               ),
               const SizedBox(height: 24),
 
@@ -95,6 +112,7 @@ class _AddItemScreenState extends State<AddItemScreen> {
     TextEditingController controller,
     String label, {
     TextInputType keyboardType = TextInputType.text,
+    IconData? icon,
   }) {
     return TextFormField(
       controller: controller,
@@ -104,6 +122,7 @@ class _AddItemScreenState extends State<AddItemScreen> {
         hintText: 'Masukkan $label',
         hintStyle: const TextStyle(fontSize: 14),
         border: OutlineInputBorder(borderRadius: BorderRadius.circular(30)),
+        prefixIcon: icon != null ? Icon(icon) : null,
       ),
 
       validator:

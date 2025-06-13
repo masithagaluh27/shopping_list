@@ -41,6 +41,9 @@ class DBHELPER13 {
       },
     );
   }
+  //foreign u/ menghubungkan data antar tabel
+  //on delete u/ hapus semua item yg terkait user
+  //on update berfungsi jika id user diubah , mka akn otomatis berubah
 
   static Future<int> registerUser({UserModel? data}) async {
     final db = await initDB();
@@ -160,7 +163,12 @@ class DBHELPER13 {
     final db = await initDB();
     return await db.update(
       'users',
-      {'name': user.name, 'username': user.username, 'phone': user.phone},
+      {
+        'name': user.name, //pakai user karena menggunakn usermodel
+        'username': user.username,
+        'email': user.email,
+        'phone': user.phone,
+      },
       where: 'id = ?',
       whereArgs: [user.id],
     );

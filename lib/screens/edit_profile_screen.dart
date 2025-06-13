@@ -16,6 +16,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   TextEditingController usernameController = TextEditingController();
   TextEditingController emailController = TextEditingController();
   TextEditingController phoneController = TextEditingController();
+  TextEditingController passwordController = TextEditingController();
 
   @override
   void initState() {
@@ -43,14 +44,10 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         username: usernameController.text,
         email: emailController.text,
         phone: phoneController.text,
+        password: passwordController.text,
       );
-      await DBHELPER13.updateUserModel(
-        updatedUser,
-      ); // kamu harus pastikan ada fungsi updateUser
-      Navigator.pop(
-        context,
-        true,
-      ); // kembali ke halaman profil dan beri sinyal 'sudah diedit'
+      await DBHELPER13.updateUserModel(updatedUser);
+      Navigator.pop(context, true);
     }
   }
 

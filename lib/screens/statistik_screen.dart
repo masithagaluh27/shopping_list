@@ -3,39 +3,32 @@ import 'package:shopping_list/database/db_helper.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 
 class StatistikScreen extends StatefulWidget {
-  final int userId; // Add userId to the constructor
+  final int userId;
   const StatistikScreen({super.key, required this.userId});
-
-  // ID route untuk navigasi ke halaman statistik
-  static const String id = '/statistik';
 
   @override
   State<StatistikScreen> createState() => _StatistikScreenState();
 }
 
 class _StatistikScreenState extends State<StatistikScreen> {
-  // List untuk menyimpan semua item yang diambil dari database
   List<Map<String, dynamic>> items = [];
 
-  // dipanggil pertama kali ketika halaman dibuka
   @override
   void initState() {
     super.initState();
     _loadItems();
   }
 
-  // Fungsi async untuk mengambil data dari database dan menyimpannya ke dalam list items
   Future<void> _loadItems() async {
-    // Changed: Now uses getItemsByUser to fetch items specific to the logged-in user
     final data = await DBHELPER13.getItemsByUser(widget.userId);
     setState(() {
-      items = data; // Set data ke dalam state agar UI diperbarui
+      items = data;
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    // Konversi list items menjadi list chartData khusus untuk chart
+    // untuk mengkonversi list items menjadi list chartData
     final chartData =
         items
             .map(
@@ -46,13 +39,16 @@ class _StatistikScreenState extends State<StatistikScreen> {
 
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Color(0xffC4D9FF),
+
         // u/ menghapus panah kiri dg paksa!!!
         automaticallyImplyLeading: false,
         title: const Text('Statistik Belanja'),
+
         actions: [
           IconButton(
             icon: const Icon(Icons.refresh),
-            onPressed: _loadItems, // Tombol refresh untuk memuat ulang data
+            onPressed: _loadItems, //u/ memuat data
           ),
         ],
       ),
@@ -66,22 +62,21 @@ class _StatistikScreenState extends State<StatistikScreen> {
             ),
             const SizedBox(height: 20),
 
-            // Jika ada data untuk ditampilkan, tampilkan grafik
+            // Jika data ada u/ ditampilkan
             if (chartData.isNotEmpty)
               Expanded(
                 child: SingleChildScrollView(
-                  scrollDirection:
-                      Axis.horizontal, // scrooll horizontal agar semua data terlihat
+                  scrollDirection: Axis.horizontal,
                   child: SizedBox(
-                    // u/ Ukuran lebar agar jumlah item tidak sempit
+                    // u/ Ukuran lebar agar jumlah item tidak sempit (horizontal)
                     width: items.length * 100.0,
                     child: SfCartesianChart(
                       // pakai itu karena kompatibel dg sumbu x dan y
 
-                      //primary = sumbu utama
-                      primaryXAxis: CategoryAxis(), // Sumbu X u/ nama produk
+                      //primary = sumbu utama (bisa diubah)
+                      primaryXAxis: CategoryAxis(),
                       primaryYAxis: NumericAxis(
-                        title: AxisTitle(text: 'Quantity'), // Label sumbu Y
+                        title: AxisTitle(text: 'Quantity'),
                         interval: 10, // Jarak antar nilai
                         minimum: 0, // Nilai minimum sumbu Y
                       ),
@@ -100,11 +95,9 @@ class _StatistikScreenState extends State<StatistikScreen> {
                               (GrafikData data, _) =>
                                   data.quantity, // Sumbu Y: jumlah
                           dataLabelSettings: const DataLabelSettings(
-                            isVisible:
-                                true, // Tampilkan label angka di tiap titik
+                            isVisible: true, // angka di titik
                           ),
-                          enableTooltip:
-                              true, // Tampilkan tooltip saat disentuh
+                          enableTooltip: true, // label data
                         ),
                       ],
                     ),

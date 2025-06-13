@@ -8,7 +8,6 @@ import 'package:shopping_list/screens/statistik_screen.dart';
 class ShoppingListScreen extends StatefulWidget {
   final int userId;
   const ShoppingListScreen({super.key, required this.userId});
-  static const String id = '/shopping_list';
 
   @override
   State<ShoppingListScreen> createState() => _ShoppingListScreenState();
@@ -86,14 +85,13 @@ class _ShoppingListScreenState extends State<ShoppingListScreen> {
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 24),
             child: Text(
-              // This shows "Total catatan: 0" when no items are found
               'Total catatan: ${filteredItems.length}',
               style: const TextStyle(fontSize: 16, color: Colors.grey),
             ),
           ),
           const SizedBox(height: 10),
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 24),
+            padding: const EdgeInsets.symmetric(horizontal: 12),
             child: TextField(
               decoration: const InputDecoration(
                 hintText: 'Cari item...',
@@ -107,25 +105,22 @@ class _ShoppingListScreenState extends State<ShoppingListScreen> {
                   searchQuery = value;
                   filteredItems = applySearch(items, searchQuery);
                 });
-                // No explicit 'Tidak ada Data' needed here, as the UI automatically
-                // reflects the filteredItems list.
               },
             ),
           ),
           const SizedBox(height: 10),
-          // Check if filteredItems is empty to display the message
+
           if (filteredItems.isEmpty)
             const Padding(
               padding: EdgeInsets.symmetric(horizontal: 24, vertical: 20),
               child: Center(
                 child: Text(
-                  'Tidak ada Data', // Display this message
+                  'Tidak ada Data',
                   style: TextStyle(fontSize: 18, color: Colors.grey),
                 ),
               ),
             )
           else
-            // Otherwise, display the list of filtered items
             for (var item in filteredItems)
               Padding(
                 padding: const EdgeInsets.symmetric(
@@ -206,7 +201,40 @@ class _ShoppingListScreenState extends State<ShoppingListScreen> {
                       ),
                       IconButton(
                         icon: const Icon(Icons.delete, color: Colors.red),
-                        onPressed: () => deleteItem(item['id']),
+                        onPressed: () async {
+                          final confirm = await showDialog<bool>(
+                            context: context,
+                            builder:
+                                (context) => AlertDialog(
+                                  title: const Text('Konfirmasi'),
+                                  content: const Text(
+                                    'Apakah kamu yakin ingin menghapus item ini?',
+                                  ),
+                                  actions: [
+                                    TextButton(
+                                      onPressed:
+                                          () =>
+                                              Navigator.of(context).pop(false),
+                                      child: const Text('Tidak'),
+                                    ),
+                                    TextButton(
+                                      onPressed:
+                                          () => Navigator.of(context).pop(true),
+                                      child: const Text(
+                                        'Ya',
+                                        style: TextStyle(
+                                          color: Color(0xffDC2525),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                          );
+
+                          if (confirm == true) {
+                            await deleteItem(item['id']);
+                          }
+                        },
                       ),
                     ],
                   ),
@@ -241,7 +269,7 @@ class _ShoppingListScreenState extends State<ShoppingListScreen> {
                   );
                   await muatItems();
                 },
-                backgroundColor: const Color.fromARGB(255, 188, 183, 243),
+                backgroundColor: const Color(0xffC5BAFF),
                 icon: const Icon(Icons.add),
                 label: const Text('Tambah Item'),
               )
@@ -259,7 +287,7 @@ class _ShoppingListScreenState extends State<ShoppingListScreen> {
         items: const [
           BottomNavigationBarItem(
             icon: Icon(Icons.note_alt_outlined, color: Color(0xffC599B6)),
-            label: 'Notes',
+            label: 'produk',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.stacked_bar_chart, color: Color(0xffC599B6)),

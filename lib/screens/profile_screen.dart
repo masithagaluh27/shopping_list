@@ -1,13 +1,14 @@
+// ... import tetap
 import 'package:flutter/material.dart';
 import 'package:shopping_list/database/db_helper.dart';
 import 'package:shopping_list/helper/preference.dart';
 import 'package:shopping_list/helper/routes.dart';
+
 import 'edit_profile_screen.dart';
 
 class ProfileScreen extends StatefulWidget {
   final int userId;
   const ProfileScreen({super.key, required this.userId});
-  // static const String id =   '/profile_screen';
 
   @override
   State<ProfileScreen> createState() => _ProfileScreenState();
@@ -38,7 +39,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     } else {
       print("User with ID ${widget.userId} not found in database.");
 
-      _logout();
+      _logout(); // log out otomatis klo user ga ketemu
     }
   }
 
@@ -52,9 +53,39 @@ class _ProfileScreenState extends State<ProfileScreen> {
     );
   }
 
+  // Fungsi utk menampilkan konfirmasi sebelum logout
+  void _showLogoutConfirmation() {
+    showDialog(
+      context: context,
+      builder:
+          (context) => AlertDialog(
+            title: const Text('Konfirmasi'),
+            content: const Text('Apakah kamu yakin ingin keluar?'),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(context),
+                child: const Text('Batal'),
+              ),
+              TextButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                  _logout();
+                },
+                child: const Text(
+                  'Ya, Keluar',
+                  style: TextStyle(color: Colors.red),
+                ),
+              ),
+            ],
+          ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Color(0xffE8F9FF),
+
       appBar: AppBar(
         automaticallyImplyLeading: false, // menghapus tombol login dg PAKSA!!!
         backgroundColor: const Color(0xffC4D9FF),
@@ -113,7 +144,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               child: Container(
                 padding: const EdgeInsets.all(12),
                 decoration: BoxDecoration(
-                  color: Colors.lightBlue.shade50,
+                  color: Color(0xffC2D9FF),
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: Row(
@@ -134,7 +165,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               child: Container(
                 padding: const EdgeInsets.all(12),
                 decoration: BoxDecoration(
-                  color: Colors.lightBlue.shade50,
+                  color: Color(0xffC2D9FF),
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: Row(
@@ -155,15 +186,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
               child: Container(
                 padding: const EdgeInsets.all(12),
                 decoration: BoxDecoration(
-                  color: Colors.lightBlue.shade50,
+                  color: Color(0xffC2D9FF),
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: Row(
                   children: [
-                    const Icon(
-                      Icons.phone_android_rounded,
-                      color: Colors.green,
-                    ),
+                    const Icon(Icons.phone_android_rounded, color: Colors.blue),
                     const SizedBox(width: 8),
                     Text(
                       phoneNumber,
@@ -212,7 +240,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   Expanded(
                     child: GestureDetector(
                       onTap:
-                          _logout, // Ketika ditekn akn menjalankan fungsi logout
+                          _showLogoutConfirmation, // tampilkan dialog konfirmasi
                       child: Container(
                         padding: const EdgeInsets.all(16),
                         decoration: BoxDecoration(

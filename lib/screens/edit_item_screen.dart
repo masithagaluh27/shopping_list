@@ -23,7 +23,7 @@ class _EditItemScreenState extends State<EditItemScreen> {
     super.initState();
     nameController = TextEditingController(
       text: widget.item['name'],
-    ); //psksi widget bcs mengambil data dr luar
+    ); //pakai widget bcs mengambil data dr luar
     deskripsiController = TextEditingController(text: widget.item['deskripsi']);
     tokoController = TextEditingController(text: widget.item['Toko']);
     quantityController = TextEditingController(
@@ -43,6 +43,20 @@ class _EditItemScreenState extends State<EditItemScreen> {
       //u/ update ke database
       await DBHELPER13.updateItem(id, name, deskripsi, toko, quantity, isDone);
 
+      // Menampilkan snackbar setelah berhasil update
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Item berhasil diupdate!'),
+          backgroundColor: Colors.green,
+          behavior: SnackBarBehavior.floating,
+          duration: Duration(seconds: 2),
+        ),
+      );
+
+      // Tunggu sebentar supaya snackbar sempat tampil
+      await Future.delayed(const Duration(milliseconds: 500));
+
+      // Kembali ke halaman sebelumnya
       Navigator.pop(context);
     }
   }
@@ -51,6 +65,7 @@ class _EditItemScreenState extends State<EditItemScreen> {
     TextEditingController controller,
     String label, {
     TextInputType keyboardType = TextInputType.text,
+    IconData? icon,
   }) {
     return TextFormField(
       controller: controller,
@@ -59,6 +74,7 @@ class _EditItemScreenState extends State<EditItemScreen> {
         labelText: label,
         hintStyle: const TextStyle(fontSize: 14),
         border: OutlineInputBorder(borderRadius: BorderRadius.circular(30)),
+        prefixIcon: icon != null ? Icon(icon) : null,
       ),
 
       validator:
@@ -78,14 +94,19 @@ class _EditItemScreenState extends State<EditItemScreen> {
             children: [
               buildTextField(nameController, 'Nama Item'),
               const SizedBox(height: 16),
-              buildTextField(deskripsiController, 'Deskripsi'),
+              buildTextField(
+                deskripsiController,
+                'Deskripsi',
+                icon: Icons.description,
+              ),
               const SizedBox(height: 16),
-              buildTextField(tokoController, 'Nama Toko'),
+              buildTextField(tokoController, 'Nama Toko', icon: Icons.store),
               const SizedBox(height: 16),
               buildTextField(
                 quantityController,
                 'Jumlah',
                 keyboardType: TextInputType.number,
+                icon: Icons.format_list_numbered,
               ),
               const SizedBox(height: 24),
               SizedBox(

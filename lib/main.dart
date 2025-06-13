@@ -19,37 +19,31 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Daftar Belanja',
-      theme: ThemeData(
-        primarySwatch: Colors.blue, // Warna utama
-      ),
-      initialRoute: AppRoutes.splash, // Menggunakan konstanta dari AppRoutes
+      theme: ThemeData(primarySwatch: Colors.blue),
+      initialRoute: AppRoutes.splash,
       routes: {
         AppRoutes.splash: (context) => const SplashScreen(),
         AppRoutes.login: (context) => const LoginScreen(),
         AppRoutes.register: (context) => const RegisterScreen(),
-        // Penting: userId sekarang diambil secara dinamis dari argumen rute.
-        // Ini memungkinkan data spesifik pengguna ditampilkan.
+
         AppRoutes.shoppingList: (context) {
-          // Mendapatkan userId dari argumen rute.
-          // Jika tidak ada argumen yang diteruskan atau argumen bukan int, akan menggunakan default 0.
           final int userId =
               ModalRoute.of(context)?.settings.arguments as int? ?? 0;
           return ShoppingListScreen(userId: userId);
         },
-        // Updated: StatistikScreen now also takes userId as an argument.
+
+        //karena butuh data dr luar u/ bag id jd seperti ini
         AppRoutes.statistik: (context) {
           final int userId =
               ModalRoute.of(context)?.settings.arguments as int? ?? 0;
-          return StatistikScreen(userId: userId);
+          return StatistikScreen(userId: userId); //u/ kirm id ke constructorny
         },
-        // Updated: ProfileScreen now also takes userId as an argument.
+
         AppRoutes.profile: (context) {
           final int userId =
               ModalRoute.of(context)?.settings.arguments as int? ?? 0;
           return ProfileScreen(userId: userId);
         },
-        // Tambahkan route ID lainnya di bawah jika ada
-        // AppRoutes.addItem: (context) => const AddItemScreen(),
       },
     );
   }

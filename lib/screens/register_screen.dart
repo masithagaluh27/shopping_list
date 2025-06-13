@@ -90,6 +90,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   ),
 
                   const SizedBox(height: 15),
+                  const Text(
+                    'Name ',
+                    style: TextStyle(fontSize: 12, color: Color(0xff888888)),
+                  ),
+                  const SizedBox(height: 15),
                   TextFormField(
                     controller: nameController,
                     validator:
