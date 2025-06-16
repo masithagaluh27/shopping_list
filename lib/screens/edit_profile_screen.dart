@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:shopping_list/database/db_helper.dart';
 import 'package:shopping_list/models/users_model.dart';
 
+//edit profile
 class EditProfileScreen extends StatefulWidget {
   final int userId;
   const EditProfileScreen({super.key, required this.userId});

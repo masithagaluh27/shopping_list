@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:shopping_list/database/db_helper.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 
+//statistik
 class StatistikScreen extends StatefulWidget {
   final int userId;
   const StatistikScreen({super.key, required this.userId});

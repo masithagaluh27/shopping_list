@@ -60,10 +60,10 @@ class _LoginScreenState extends State<LoginScreen> {
                       controller: emailController,
                       validator: (value) {
                         if (value == null || value.isEmpty) {
-                          return 'Email wajib diisi';
+                          return 'Email cannot be empty';
                         } else if (!value.contains('@') ||
                             !value.contains('.')) {
-                          return 'Format email tidak valid';
+                          return 'Invalid email format';
                         }
                         return null;
                       },
@@ -90,7 +90,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       obscureText: !isPasswordVisible,
                       validator: (value) {
                         if (value == null || value.isEmpty) {
-                          return 'Password wajib diisi';
+                          return 'Password cannot be empty';
                         }
                         return null;
                       },
@@ -162,7 +162,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         } else {
                           ScaffoldMessenger.of(context).showSnackBar(
                             const SnackBar(
-                              content: Text("Email atau password salah"),
+                              content: Text("Incorrect email or password"),
                               backgroundColor: Colors.red,
                               duration: Duration(seconds: 2),
                             ),
@@ -293,7 +293,6 @@ class _LoginScreenState extends State<LoginScreen> {
                 alignment: Alignment.centerLeft,
                 child: GestureDetector(
                   onTap: () {
-                    // FIX: Menggunakan AppRoutes.register
                     Navigator.pushNamed(context, AppRoutes.register);
                   },
                   child: RichText(

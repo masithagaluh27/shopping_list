@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:shopping_list/database/db_helper.dart';
 
+//add item
+
 class AddItemScreen extends StatefulWidget {
   final int userId;
 

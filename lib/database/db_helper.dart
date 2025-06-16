@@ -41,9 +41,6 @@ class DBHELPER13 {
       },
     );
   }
-  //foreign u/ menghubungkan data antar tabel
-  //on delete u/ hapus semua item yg terkait user
-  //on update berfungsi jika id user diubah , mka akn otomatis berubah
 
   static Future<int> registerUser({UserModel? data}) async {
     final db = await initDB();

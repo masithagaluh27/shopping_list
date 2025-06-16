@@ -51,9 +51,12 @@ class _ShoppingListScreenState extends State<ShoppingListScreen> {
   Future<void> deleteItem(int id) async {
     await DBHELPER13.deleteItem(id);
     await muatItems();
-    ScaffoldMessenger.of(
-      context,
-    ).showSnackBar(const SnackBar(content: Text('Item dihapus')));
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text('Item dihapus'),
+        backgroundColor: Colors.red,
+      ),
+    );
   }
 
   Widget buildShoppingListView() {
@@ -130,11 +133,11 @@ class _ShoppingListScreenState extends State<ShoppingListScreen> {
                 child: Container(
                   decoration: BoxDecoration(
                     color:
-                        item['isDone'] == 1 ? Colors.grey[300] : Colors.white,
+                        item['isDone'] == 1 ? Color(0xffECE9F5) : Colors.white,
                     borderRadius: BorderRadius.circular(12),
                     boxShadow: const [
                       BoxShadow(
-                        color: Colors.black12,
+                        color: Color(0xFFD6CDEA),
                         blurRadius: 4,
                         offset: Offset(0, 2),
                       ),
@@ -286,15 +289,15 @@ class _ShoppingListScreenState extends State<ShoppingListScreen> {
         unselectedItemColor: Colors.grey,
         items: const [
           BottomNavigationBarItem(
-            icon: Icon(Icons.note_alt_outlined, color: Color(0xffC599B6)),
+            icon: Icon(Icons.note_alt_outlined, color: Color(0xff6A4C93)),
             label: 'produk',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.stacked_bar_chart, color: Color(0xffC599B6)),
+            icon: Icon(Icons.stacked_bar_chart, color: Color(0xff6A4C93)),
             label: 'Statistik',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.person, color: Color(0xffC599B6)),
+            icon: Icon(Icons.person, color: Color(0xff6A4C93)),
             label: 'Profile',
           ),
         ],

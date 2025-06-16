@@ -40,6 +40,7 @@ class _EditItemScreenState extends State<EditItemScreen> {
       int quantity = int.parse(quantityController.text);
       int isDone = widget.item['isDone'] ?? 0;
 
+      //edit item
       //u/ update ke database
       await DBHELPER13.updateItem(id, name, deskripsi, toko, quantity, isDone);
 

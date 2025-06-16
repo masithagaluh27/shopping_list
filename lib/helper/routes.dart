@@ -6,3 +6,5 @@ class AppRoutes {
   static const String statistik = '/statistik';
   static const String profile = '/profile';
 }
+
+//.

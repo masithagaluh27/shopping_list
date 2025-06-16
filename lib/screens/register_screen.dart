@@ -74,10 +74,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     controller: emailController,
                     validator: (value) {
                       if (value == null || value.isEmpty) {
-                        return 'Email tidak boleh kosong';
+                        return 'Email cannot be empty';
                       } else if (!value.contains('@') ||
                           !value.endsWith('.com')) {
-                        return 'Format email tidak valid';
+                        return 'Invalid email format';
                       }
                       return null;
                     },
@@ -97,11 +97,12 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   const SizedBox(height: 15),
                   TextFormField(
                     controller: nameController,
-                    validator:
-                        (value) =>
-                            value == null || value.isEmpty
-                                ? 'Please enter some text'
-                                : null,
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Name cannot be empty';
+                      }
+                      return null;
+                    },
                     decoration: InputDecoration(
                       hintText: 'Enter your name',
                       border: OutlineInputBorder(
@@ -118,11 +119,12 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   const SizedBox(height: 15),
                   TextFormField(
                     controller: usernameController,
-                    validator:
-                        (value) =>
-                            value == null || value.isEmpty
-                                ? 'Please enter some text'
-                                : null,
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Username cannot be empty';
+                      }
+                      return null;
+                    },
                     decoration: InputDecoration(
                       hintText: 'Enter your username',
                       border: OutlineInputBorder(
@@ -139,11 +141,12 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   const SizedBox(height: 15),
                   TextFormField(
                     controller: phoneController,
-                    validator:
-                        (value) =>
-                            value == null || value.isEmpty
-                                ? 'Please enter some text'
-                                : null,
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Phone number cannot be empty';
+                      }
+                      return null;
+                    },
                     decoration: InputDecoration(
                       hintText: 'Enter your phone number',
                       border: OutlineInputBorder(
@@ -161,11 +164,12 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   TextFormField(
                     controller: passwordController,
                     obscureText: !isPasswordVisible,
-                    validator:
-                        (value) =>
-                            value == null || value.isEmpty
-                                ? 'Please enter some text'
-                                : null,
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Password cannot be empty';
+                      }
+                      return null;
+                    },
                     decoration: InputDecoration(
                       hintText: 'Enter your password',
                       border: OutlineInputBorder(
